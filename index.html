@@ -164,6 +164,10 @@ h2{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size
 .lvl.mod{color:#f2c879;border-color:rgba(242,200,121,.45)}
 .lvl.hard{color:#ff9a8a;border-color:rgba(255,154,138,.5)}
 .hike p{font-size:.92rem;color:#c8bfb1}
+.atrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.atl{display:inline-block;padding:7px 12px;border:1px solid rgba(255,255,255,.18);border-radius:3px;color:var(--bone);text-decoration:none;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+.atl:hover{border-color:var(--ember);color:var(--ember)}
+.hike p.atnote{margin-top:10px;font-size:.82rem;color:var(--frost)}
 .course{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px 32px;margin-top:20px;padding:20px;border:1px solid rgba(255,123,51,.45);border-radius:3px;background:radial-gradient(120% 90% at 0% 0%,rgba(255,123,51,.12),transparent 60%),#0e171b}
 .course .mono{color:var(--ember)}
 .course h3{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:1.6rem;line-height:1;margin:6px 0 10px}
@@ -628,6 +632,8 @@ body.arrived .arrive{display:block}
         <h3>Bear Hair Gap Loop</h3>
         <div class="hstats"><span><b>4.1</b> mi loop</span><span><b>~935</b> ft gain</span><span class="lvl mod">Moderate</span></div>
         <p>Starts at Vogel State Park's backcountry trailhead and climbs to an overlook of Lake Trahlyta and the mountains behind it. Back in time for lunch. State park parking fee.</p>
+        <div class="atrow"><a class="atl mono" href="https://www.alltrails.com/trail/us/georgia/bear-hair-gap-trail" target="_blank" rel="noopener">AllTrails ↗</a></div>
+        <p class="atnote">Grabbing the offline map? Do it before you leave, not at the trailhead.</p>
       </article>
     </div>
     <details class="more"><summary>5 more hikes</summary>
@@ -636,13 +642,15 @@ body.arrived .arrive{display:block}
         <span class="tag mono">The big one · ~20 min</span>
         <h3>Blood Mountain</h3>
         <div class="hstats"><span><b>4.3</b> mi out &amp; back</span><span><b>~1,450</b> ft gain</span><span class="lvl hard">Strenuous</span></div>
-        <p>Byron Reece trailhead at Neels Gap, then the Appalachian Trail to its highest summit in Georgia and an old stone shelter on top. The lot fills early on Saturdays, so leave by 8.</p>
+        <p>Byron Reece trailhead at Neels Gap, then the Appalachian Trail to its highest summit in Georgia and an old stone shelter on top. The lot fills early on Saturdays, so leave by 8. The Byron Reece trail was rerouted in June (about 0.4 mi longer), so follow the trail signs if the app's line disagrees.</p>
+        <div class="atrow"><a class="atl mono" href="https://www.alltrails.com/trail/us/georgia/neels-gap-to-blood-mountain" target="_blank" rel="noopener">AllTrails ↗</a></div>
       </article>
       <article class="hike">
         <span class="tag mono">Best view · ~30 min</span>
         <h3>Brasstown Bald</h3>
         <div class="hstats"><span><b>1.2</b> mi paved</span><span><b>~400</b> ft gain</span><span class="lvl mod">Short &amp; steep</span></div>
         <p>Georgia's highest point. The deck looks over four states. Opens at 10 AM, $8 a person (16 and up), and a shuttle can run anyone who'd rather skip the climb.</p>
+        <div class="atrow"><a class="atl mono" href="https://www.alltrails.com/trail/us/georgia/brasstown-bald" target="_blank" rel="noopener">AllTrails ↗</a></div>
       </article>
     </div>
     <h3 class="subhead">Friday · while the guys golf</h3>
@@ -652,18 +660,21 @@ body.arrived .arrive{display:block}
         <h3>Lake Trahlyta + Helton Creek Falls</h3>
         <div class="hstats"><span><b>1.6</b> mi total</span><span><b>Flat</b></span><span class="lvl easy">Easy</span></div>
         <p>A 1-mile loop around the lake at Vogel with a spur to Trahlyta Falls, then a short drive to Helton Creek's two waterfalls, about 0.6 miles round trip. The last stretch to Helton Creek is a gravel forest road.</p>
+        <div class="atrow"><a class="atl mono" href="https://www.alltrails.com/trail/us/georgia/lake-trahlyta-trail" target="_blank" rel="noopener">Lake Trahlyta ↗</a><a class="atl mono" href="https://www.alltrails.com/trail/us/georgia/helton-creek-falls-trail" target="_blank" rel="noopener">Helton Creek ↗</a></div>
       </article>
       <article class="hike">
         <span class="tag mono">Two waterfalls · ~25 min</span>
         <h3>DeSoto Falls</h3>
         <div class="hstats"><span><b>2</b> mi out &amp; back</span><span><b>~160</b> ft gain</span><span class="lvl easy">Easy</span></div>
-        <p>Over a footbridge and along Frogtown Creek to the lower falls, then the big upper cascade at about a mile. Small self-pay day-use fee, so bring cash.</p>
+        <p>Over a footbridge and along Frogtown Creek to the lower falls, then the big upper cascade at about a mile. Small self-pay day-use fee, so bring cash. Hikers reported the lower-falls spur closed for storm damage this summer; the upper falls is the better half anyway.</p>
+        <div class="atrow"><a class="atl mono" href="https://www.alltrails.com/trail/us/georgia/desoto-falls-trail" target="_blank" rel="noopener">AllTrails ↗</a></div>
       </article>
       <article class="hike">
         <span class="tag mono">Big payoff · ~40 min</span>
         <h3>Preachers Rock</h3>
         <div class="hstats"><span><b>2</b> mi out &amp; back</span><span><b>~500</b> ft gain</span><span class="lvl mod">Easy, steep finish</span></div>
         <p>Appalachian Trail from Woody Gap to one of the best views in north Georgia. The last quarter mile is switchbacks. Pair it with lunch in Dahlonega on the way back.</p>
+        <div class="atrow"><a class="atl mono" href="https://www.alltrails.com/trail/us/georgia/preachers-rock-from-woody-gap-recreational-area" target="_blank" rel="noopener">AllTrails ↗</a></div>
       </article>
     </div>
     </details>
