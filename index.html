@@ -454,6 +454,7 @@ details.more[open]>summary{margin-bottom:14px}
     <div class="next" id="nowNext"><span class="mono">Up next</span><b id="nowNextT"></b></div>
   </div>
   <div class="ess">
+    <button type="button" class="wifi" id="copyPw2" style="grid-column:1/-1"><span>Wi-Fi · HOLLY JOLLY GUEST</span><b>Copy the password</b><small id="copyPw2s">Tap to copy · John3:16!</small></button>
     <a href="helenback-xiv.ics" download><span>Tee times, dinners, kickoff</span><b>Add to calendar</b><small>Calendar file ↓</small></a>
     <div class="dir"><span>50 Sullivan Trail</span><b>Directions</b><small><a href="https://maps.apple.com/?address=50%20Sullivan%20Trail,%20Blairsville,%20GA%2030512" target="_blank" rel="noopener">Apple ↗</a> · <a href="https://www.google.com/maps/dir/?api=1&amp;destination=50+Sullivan+Trail,+Blairsville,+GA+30512" target="_blank" rel="noopener">Google ↗</a></small><em>Google: skip Cindy Cove</em></div>
   </div>
@@ -855,14 +856,15 @@ details.more[open]>summary{margin-bottom:14px}
       <div>
         <h3>If something breaks</h3>
         <div class="kv">
-          <div><span>Kathryn · general questions</span><span>Number in the group text</span></div>
-          <div><span>Kurt · locks, maintenance</span><span>Number in the group text</span></div>
+          <div><span>Kathryn · general questions</span><span><a href="tel:+17204840277" style="color:inherit">720.484.0277</a></span></div>
+          <div><span>Kurt · locks, maintenance</span><span><a href="tel:+13039182620" style="color:inherit">303.918.2620</a></span></div>
         </div>
         <h3 style="margin-top:22px">Wi-Fi</h3>
         <div class="kv">
           <div><span>Network</span><span>HOLLY JOLLY GUEST</span></div>
-          <div><span>Password</span><span>In the group text</span></div>
+          <div><span>Password</span><span id="pw">John3:16!</span></div>
         </div>
+        <button class="btn" id="copyPw" type="button" style="margin-top:12px">Copy password</button>
       </div>
     </div>
   </div>
@@ -1155,6 +1157,13 @@ details.more[open]>summary{margin-bottom:14px}
   document.addEventListener("keydown",function(e){if(!el.classList.contains("on"))return;if(e.key==="Escape")close();if(e.key==="ArrowRight")show(i+1);if(e.key==="ArrowLeft")show(i-1)});
 })();
 
+
+/* ---------- Copy Wi-Fi ---------- */
+(function(){
+  function copy(btn,label,orig){try{navigator.clipboard.writeText("John3:16!").then(function(){label.textContent="Copied";setTimeout(function(){label.textContent=orig},1600)},function(){label.textContent="Password: John3:16!"})}catch(e){label.textContent="Password: John3:16!"}}
+  var a=document.getElementById("copyPw"); if(a)a.addEventListener("click",function(){copy(a,a,"Copy password")});
+  var b=document.getElementById("copyPw2"),bs=document.getElementById("copyPw2s"); if(b)b.addEventListener("click",function(){copy(b,bs,"Tap to copy · John3:16!")});
+})();
 /* ---------- Add to home screen tip ---------- */
 (function(){
   var box=document.getElementById("a2hs"),txt=document.getElementById("a2hsTxt"),go=document.getElementById("a2hsGo");
