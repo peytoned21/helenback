@@ -418,6 +418,7 @@ details.more[open]>summary{margin-bottom:14px}
 .a2hs button.x{background:none;border:0;color:var(--frost);font-size:1.1rem;cursor:pointer;align-self:flex-start;padding:0 2px}
 .a2hs button.go{margin-top:8px}
 [hidden]{display:none!important}
+.codes{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px;border:1px solid rgba(255,123,51,.55)!important;background:linear-gradient(135deg,#1d1a17,#121a1d)!important;cursor:default!important}.codes div{display:flex;flex-direction:column;gap:3px}.codes b{font-family:var(--mono)!important;font-size:1.25rem!important;letter-spacing:.08em;color:var(--bone)}.codes em{font-style:normal;font-size:.62rem;color:var(--frost)}
 </style>
 </head>
 <body>
@@ -454,6 +455,7 @@ details.more[open]>summary{margin-bottom:14px}
     <div class="next" id="nowNext"><span class="mono">Up next</span><b id="nowNextT"></b></div>
   </div>
   <div class="ess">
+    <div class="codes"><div><span>Gate · covered bridge</span><b>0050</b><em>Keypad at the bridge</em></div><div><span>All doors</span><b>277778 ✓</b><em>Tap Yale first, then code, then ✓</em></div></div>
     <button type="button" class="wifi" id="copyPw2" style="grid-column:1/-1"><span>Wi-Fi · HOLLY JOLLY GUEST</span><b>Copy the password</b><small id="copyPw2s">Tap to copy · John3:16!</small></button>
     <a href="helenback-xiv.ics" download><span>Tee times, dinners, kickoff</span><b>Add to calendar</b><small>Calendar file ↓</small></a>
     <div class="dir"><span>50 Sullivan Trail</span><b>Directions</b><small><a href="https://maps.apple.com/?address=50%20Sullivan%20Trail,%20Blairsville,%20GA%2030512" target="_blank" rel="noopener">Apple ↗</a> · <a href="https://www.google.com/maps/dir/?api=1&amp;destination=50+Sullivan+Trail,+Blairsville,+GA+30512" target="_blank" rel="noopener">Google ↗</a></small><em>Google: skip Cindy Cove</em></div>
@@ -499,7 +501,7 @@ details.more[open]>summary{margin-bottom:14px}
         <span class="tag mono">Timing</span>
         <h3>Check-in is 4:00 PM</h3>
         <p>Early check-in at noon costs $200 and only happens if the owners text Peyton 24 hours ahead. <strong>No text, no early check-in.</strong></p>
-        <p>Park around back by the wheelchair ramp. That door is the easiest one for unloading. Door and gate codes are in the group text.</p>
+        <p>Park around back by the wheelchair ramp. That door is the easiest one for unloading.</p><p><strong>Gate at the covered bridge: 0050.</strong> <strong>All doors: tap the Yale button, enter 277778, then the ✓.</strong> Tap Yale again to lock when you leave.</p>
       </article>
     </div>
   </div>
@@ -861,6 +863,8 @@ details.more[open]>summary{margin-bottom:14px}
         </div>
         <h3 style="margin-top:22px">Wi-Fi</h3>
         <div class="kv">
+          <div><span>Gate code (covered bridge)</span><span>0050</span></div>
+          <div><span>Door code (all doors)</span><span>Yale → 277778 → ✓</span></div>
           <div><span>Network</span><span>HOLLY JOLLY GUEST</span></div>
           <div><span>Password</span><span id="pw">John3:16!</span></div>
         </div>
@@ -1059,7 +1063,7 @@ details.more[open]>summary{margin-bottom:14px}
       t.textContent="Three things first";
       sub.textContent="";
       ul.hidden=false;
-      ul.innerHTML='<li><b>Buy the booze on the way.</b> Union County is dry: stock up in Helen or Hiawassee (closed Sundays).</li><li><b>Don’t turn on Cindy Cove.</b> Use Old Bald Mountain Rd off Hwy 19.</li><li><b>Doors open at 4 PM Thursday.</b> Codes are in the group text.</li>';
+      ul.innerHTML='<li><b>Buy the booze on the way.</b> Union County is dry: stock up in Helen or Hiawassee (closed Sundays).</li><li><b>Don’t turn on Cindy Cove.</b> Use Old Bald Mountain Rd off Hwy 19.</li><li><b>Doors open at 4 PM Thursday.</b> Gate 0050. Doors: Yale button, 277778, then ✓.</li>';
       nx.textContent="Thu 4:00 PM · Doors open at Holly Jolly";
       return;
     }
