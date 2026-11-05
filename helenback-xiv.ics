@@ -48,7 +48,7 @@ DTSTART;TZID=America/New_York:20261106T183000
 DTEND;TZID=America/New_York:20261106T203000
 SUMMARY:Dinner by Nathan & Em
 LOCATION:Holly Jolly Christmas Cabin\, 50 Sullivan Trail\, Blairsville\, GA 30512
-DESCRIPTION:Then the firepit. Fire out by 10:30.
+DESCRIPTION:Smoked pork tenderloin\, roasted vegetables and rice. Then the firepit. Fire out by 10:30.
 END:VEVENT
 BEGIN:VEVENT
 UID:hb14-3@helenback
@@ -71,6 +71,7 @@ DTSTART;TZID=America/New_York:20261107T123000
 DTEND;TZID=America/New_York:20261107T133000
 SUMMARY:Lunch by Miguel & Kellianne
 LOCATION:Holly Jolly Christmas Cabin\, 50 Sullivan Trail\, Blairsville\, GA 30512
+DESCRIPTION:Asian chicken salad.
 END:VEVENT
 BEGIN:VEVENT
 UID:hb14-5@helenback
@@ -79,6 +80,7 @@ DTSTART;TZID=America/New_York:20261107T180000
 DTEND;TZID=America/New_York:20261107T193000
 SUMMARY:Dinner by Brett & Jessi
 LOCATION:Holly Jolly Christmas Cabin\, 50 Sullivan Trail\, Blairsville\, GA 30512
+DESCRIPTION:Spaghetti night.
 END:VEVENT
 BEGIN:VEVENT
 UID:hb14-6@helenback
