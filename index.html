@@ -438,6 +438,20 @@ body.dawgsday .tab[aria-current]{background:#ba0c2f!important;border-color:#ba0c
 @keyframes flick{0%{transform:scale(.85);opacity:.75}100%{transform:scale(1.1);opacity:1}}
 /* snow burst */
 .flake{position:fixed;z-index:2000;pointer-events:none;color:#fff;text-shadow:0 0 6px rgba(200,230,255,.9);will-change:transform,opacity}
+.lastmile{margin:14px 0 28px;display:grid;gap:14px}
+.lastmile svg{width:100%;max-width:420px;height:auto;border:1px solid var(--line);border-radius:3px}
+.lastmile ol{margin:0;padding-left:20px;color:#c8bfb1;font-size:.92rem}.lastmile li{margin:6px 0}.lastmile b{color:var(--bone)}
+@media(min-width:760px){.lastmile{grid-template-columns:420px 1fr;align-items:start}}
+/* arrival */
+.arrive{display:none;margin-bottom:12px;border:1px solid var(--ember);border-radius:4px;padding:16px;background:radial-gradient(120% 120% at 100% 0%,rgba(255,123,51,.25),transparent 60%),#121a1d}
+body.arrived .arrive{display:block}
+.arrive h2{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(1.8rem,7vw,2.6rem);line-height:.95;margin:6px 0 10px}
+.arrive .big{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.arrive .big div{background:#0b1216;border:1px solid var(--line);border-radius:3px;padding:10px}
+.arrive .big span{display:block;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--frost)}
+.arrive .big b{font-family:var(--mono);font-size:clamp(1.15rem,5.6vw,1.7rem);white-space:nowrap;letter-spacing:.06em;color:var(--bone)}
+.arrive ol{margin:10px 0 0;padding-left:18px;color:#c8bfb1;font-size:.88rem}
+.arrbtn{margin-top:8px;background:none;border:0;padding:0;color:var(--ember);font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-align:left}
 </style>
 </head>
 <body>
@@ -464,6 +478,12 @@ body.dawgsday .tab[aria-current]{background:#ba0c2f!important;border-color:#ba0c
 
 <main>
 <div class="wrap nowwrap" id="now">
+  <div class="arrive" id="arrive" aria-live="polite">
+    <span class="mono" style="color:var(--ember);font-size:.66rem;letter-spacing:.14em">You made it</span>
+    <h2>Welcome to Holly Jolly</h2>
+    <div class="big"><div><span>Gate · covered bridge</span><b>0050</b></div><div><span>Doors</span><b>277778 ✓</b></div></div>
+    <ol><li>Through the red covered bridge; the cabin is right there on the right.</li><li>Drive around back and park by the ramp. That's the door to unload.</li><li>Tap the Yale button, enter 277778, then ✓.</li></ol>
+  </div>
   <button type="button" class="playline" data-story><i>▶</i>18 years in 2 minutes</button>
   <div class="now" aria-live="polite">
     <div class="dawgsbar">Go Dawgs · Georgia at Ole Miss</div>
@@ -476,7 +496,7 @@ body.dawgsday .tab[aria-current]{background:#ba0c2f!important;border-color:#ba0c
     <div class="next" id="nowNext"><span class="mono">Up next</span><b id="nowNextT"></b></div>
   </div>
   <div class="ess">
-    <div class="codes"><div><span>Gate · covered bridge</span><b>0050</b><em>Keypad at the bridge</em></div><div><span>All doors</span><b>277778 ✓</b><em>Tap Yale first, then code, then ✓</em></div></div>
+    <div class="codes"><div><span>Gate · covered bridge</span><b>0050</b><em>Keypad at the bridge</em></div><div><span>All doors</span><b>277778 ✓</b><em>Tap Yale first, then code, then ✓</em></div><button type="button" class="arrbtn" id="arrBtn" style="grid-column:1/-1">📍 Turn on arrival mode · codes pop up as you pull in</button><a class="arrbtn" href="#lastmile" style="grid-column:1/-1;text-decoration:none">↓ Last-mile map (works with no signal)</a></div>
     <button type="button" class="wifi" id="copyPw2" style="grid-column:1/-1"><span>Wi-Fi · HOLLY JOLLY GUEST</span><b>Copy the password</b><small id="copyPw2s">Tap to copy · John3:16!</small></button>
     <a href="helenback-xiv.ics" download><span>Tee times, dinners, kickoff</span><b>Add to calendar</b><small>Calendar file ↓</small></a>
     <div class="dir"><span>50 Sullivan Trail</span><b>Directions</b><small><a href="https://maps.apple.com/?address=50%20Sullivan%20Trail,%20Blairsville,%20GA%2030512" target="_blank" rel="noopener">Apple ↗</a> · <a href="https://www.google.com/maps/dir/?api=1&amp;destination=50+Sullivan+Trail,+Blairsville,+GA+30512" target="_blank" rel="noopener">Google ↗</a></small><em>Google: skip Cindy Cove</em></div>
@@ -499,7 +519,7 @@ body.dawgsday .tab[aria-current]{background:#ba0c2f!important;border-color:#ba0c
 </div>
 <nav class="jump" aria-label="Jump to">
   <div class="wrap chips">
-    <a href="#weekend">Schedule</a><a href="#now">Photos</a><a href="#meals">Food</a><a href="#nutcup">Nut Cup</a><a href="#hikes">Hikes</a><a href="#slate">Football</a><a href="#cabin">Cabin</a><a href="#rules">Rules</a><a href="#pack">Bring</a><a href="#logistics">Address &amp; Wi-Fi</a><a href="#before">Drive up</a>
+    <a href="#weekend">Schedule</a><a href="#now">Photos</a><a href="#meals">Food</a><a href="#nutcup">Nut Cup</a><a href="#hikes">Hikes</a><a href="#slate">Football</a><a href="#cabin">Cabin</a><a href="#rules">Rules</a><a href="#pack">Bring</a><a href="#logistics">Last mile &amp; Wi-Fi</a><a href="#before">Drive up</a>
   </div>
 </nav>
 <section id="before">
@@ -836,6 +856,53 @@ body.dawgsday .tab[aria-current]{background:#ba0c2f!important;border-color:#ba0c
 <section id="logistics">
   <div class="wrap">
     <div class="sec-head"><div class="sec-num">09</div><h2>Getting there &amp; getting stuff</h2><div class="sec-sub">Everything's about fifteen minutes away.</div></div>
+    <h3 class="subhead" id="lastmile">The last mile <span class="mono" style="font-size:.6rem;color:var(--frost);letter-spacing:.1em;vertical-align:middle">· saved for no signal</span></h3>
+    <div class="lastmile"><svg viewBox="0 0 320 470" role="img" aria-label="Last mile: from Gainesville Highway 19/129, skip Cindy Cove Road, turn onto Old Bald Mountain Road, right on Old Sullivan Road, right on Sullivan Trail, through the red covered bridge (gate 0050), cabin immediately on the right." xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace,Menlo,monospace">
+<defs><pattern id="grv" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#5b4a3a"/><circle cx="2" cy="2" r="1" fill="#8a745c"/><circle cx="6" cy="6" r="1" fill="#7a6650"/></pattern></defs>
+<rect width="320" height="470" fill="#0e171a"/>
+<!-- Hwy 19 -->
+<path d="M60 460 L60 40" stroke="#3a4a52" stroke-width="16" fill="none"/>
+<path d="M60 460 L60 40" stroke="#c8bfb1" stroke-width="1.5" stroke-dasharray="8 8" fill="none"/>
+<text x="20" y="455" fill="#93adb8" font-size="10" transform="rotate(-90 20 455)">GAINESVILLE HWY 19 / 129</text>
+<!-- Cindy Cove (wrong) -->
+<path d="M60 360 L150 330" stroke="#5a2a2a" stroke-width="10" fill="none"/>
+<path d="M120 318 l22 22 M142 318 l-22 22" stroke="#e4002b" stroke-width="4"/>
+<text x="160" y="322" fill="#ff8a8a" font-size="11" font-weight="700">CINDY COVE RD</text>
+<text x="160" y="337" fill="#ff8a8a" font-size="9.5">Don't. One-lane dirt,</text>
+<text x="160" y="349" fill="#ff8a8a" font-size="9.5">potholes, fallen trees.</text>
+<text x="160" y="361" fill="#c8bfb1" font-size="9.5">Keep going ~2 min.</text>
+<!-- Old Bald Mountain Rd -->
+<path d="M60 230 L170 230" stroke="#3a4a52" stroke-width="12" fill="none"/>
+<circle cx="60" cy="230" r="9" fill="#ff7b33"/><text x="56" y="234" fill="#160d07" font-size="11" font-weight="700">1</text>
+<text x="74" y="254" fill="#eee5d6" font-size="11" font-weight="700">TURN: OLD BALD MTN RD</text>
+<!-- Old Sullivan Rd -->
+<path d="M170 230 L170 140" stroke="#3a4a52" stroke-width="12" fill="none"/>
+<circle cx="170" cy="230" r="9" fill="#ff7b33"/><text x="166" y="234" fill="#160d07" font-size="11" font-weight="700">2</text>
+<text x="182" y="202" fill="#eee5d6" font-size="11" font-weight="700">RIGHT:</text><text x="182" y="215" fill="#eee5d6" font-size="11" font-weight="700">OLD SULLIVAN RD</text>
+<!-- Sullivan Trail gravel -->
+<path d="M170 140 L262 140 L262 86" stroke="url(#grv)" stroke-width="12" fill="none"/>
+<circle cx="170" cy="140" r="9" fill="#ff7b33"/><text x="166" y="144" fill="#160d07" font-size="11" font-weight="700">3</text>
+<text x="96" y="124" fill="#eee5d6" font-size="11" font-weight="700">RIGHT: SULLIVAN TRAIL</text>
+<text x="186" y="162" fill="#d9c3a0" font-size="9.5">Last 0.8 mi:</text><text x="186" y="174" fill="#d9c3a0" font-size="9.5">packed gravel</text>
+<!-- Covered bridge -->
+<rect x="246" y="56" width="32" height="30" fill="#b3261e" stroke="#eee5d6" stroke-width="1.5"/>
+<path d="M243 58 L262 42 L281 58 Z" fill="#7d1a14" stroke="#eee5d6" stroke-width="1.5"/>
+<text x="316" y="22" text-anchor="end" fill="#ff7b33" font-size="11" font-weight="700">RED COVERED BRIDGE</text>
+<text x="240" y="44" text-anchor="end" fill="#eee5d6" font-size="10">Gate 0050</text>
+<!-- Cabin -->
+<path d="M290 98 L304 86 L318 98 L318 116 L290 116 Z" fill="#ff7b33"/>
+<text x="316" y="130" text-anchor="end" fill="#ff7b33" font-size="10" font-weight="700">CABIN, RIGHT</text><text x="316" y="142" text-anchor="end" fill="#ff7b33" font-size="10" font-weight="700">AFTER BRIDGE</text>
+</svg>
+      <ol>
+        <li><b>Gainesville Hwy 19/129:</b> pass Cindy Cove Rd, don't turn. Keep going a couple of minutes.</li>
+        <li><b>Turn onto Old Bald Mountain Rd.</b></li>
+        <li><b>Right on Old Sullivan Rd.</b></li>
+        <li><b>Right on Sullivan Trail.</b> The last 0.8 mi is packed gravel.</li>
+        <li><b>Red covered bridge:</b> gate code <b>0050</b>. The cabin is immediately on the right.</li>
+        <li><b>Follow the drive to the back.</b> Park by the ramp. Doors: Yale, 277778, ✓.</li>
+      </ol>
+      <p class="note" style="margin-top:8px">Not to scale. Turn directions from the owners and a neighbor's listing; Apple Maps routes it right.</p>
+    </div>
     <div class="logi">
       <div>
         <h3>Address</h3>
@@ -1221,6 +1288,27 @@ window.hbSnow=function(el){
     f.animate([{transform:"translate(-50%,-50%) scale(.4)",opacity:1},{transform:"translate("+(dx-size/2)+"px,"+dy+"px) rotate("+rot/2+"deg)",opacity:1,offset:.35},{transform:"translate("+(dx*1.2-size/2)+"px,"+(dy+fall)+"px) rotate("+rot+"deg)",opacity:0}],{duration:1600+Math.random()*900,easing:"cubic-bezier(.2,.7,.4,1)"}).onfinish=function(){f.remove()};
   })()}
 };
+
+/* ---------- Arrival mode ---------- */
+(function(){
+  var T={lat:34.7793,lng:-83.9069}, R=2.6; /* km around the Greenberry Farms gate */
+  var btn=document.getElementById("arrBtn"); if(!btn||!navigator.geolocation)return;
+  var q=(location.search.match(/arrive=1/)); if(q)document.body.classList.add("arrived");
+  function km(a,b,c,d){var r=Math.PI/180,x=(d-b)*r*Math.cos((a+c)/2*r),y=(c-a)*r;return Math.sqrt(x*x+y*y)*6371}
+  var wid=null;
+  function start(fromClick){
+    btn.textContent="📍 Arrival mode on · watching for the bridge";
+    try{localStorage.setItem("hb14-arrive","1")}catch(e){}
+    wid=navigator.geolocation.watchPosition(function(p){
+      var d=km(p.coords.latitude,p.coords.longitude,T.lat,T.lng);
+      if(d<=R){var was=document.body.classList.contains("arrived");document.body.classList.add("arrived");btn.textContent="📍 You're here. Codes are up top.";
+        if(!was){var a=document.getElementById("arrive");if(a)a.scrollIntoView({behavior:"smooth",block:"start"});if(navigator.vibrate)navigator.vibrate(120)}}
+      else{btn.textContent="📍 Arrival mode on · "+(d*0.621).toFixed(d<16?1:0)+" mi to go"}
+    },function(err){btn.textContent=err.code===1?"📍 Location blocked. Codes are right here anyway.":"📍 Can't get location right now";try{localStorage.removeItem("hb14-arrive")}catch(e){}},{enableHighAccuracy:true,maximumAge:30000,timeout:20000});
+  }
+  btn.addEventListener("click",function(){if(wid===null)start(true)});
+  try{if(localStorage.getItem("hb14-arrive")==="1"&&navigator.permissions){navigator.permissions.query({name:"geolocation"}).then(function(r){if(r.state==="granted")start(false)})}}catch(e){}
+})();
 /* ---------- Copy Wi-Fi ---------- */
 (function(){
   function copy(btn,label,orig){try{navigator.clipboard.writeText("John3:16!").then(function(){label.textContent="Copied";setTimeout(function(){label.textContent=orig},1600)},function(){label.textContent="Password: John3:16!"})}catch(e){label.textContent="Password: John3:16!"}}
