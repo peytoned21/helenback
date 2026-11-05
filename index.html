@@ -384,10 +384,14 @@ details.more[open]>summary{margin-bottom:14px}
 /* ---- stories ---- */
 #story{position:fixed;inset:0;z-index:1000;background:#05090b;display:none;touch-action:manipulation;user-select:none;-webkit-user-select:none}
 #story.on{display:block}
-#story .ph{position:absolute;inset:0;background:#05090b center/cover no-repeat;opacity:0;transition:opacity .6s}
-#story .ph.show{opacity:1;animation:kb 3s ease-out forwards}
+#story .ph{position:absolute;inset:0;background:#05090b center/cover no-repeat;opacity:0;transition:opacity .6s;overflow:hidden}
+#story .ph::before{content:"";position:absolute;inset:-40px;background:inherit;background-size:cover;filter:blur(22px) brightness(.6) saturate(1.15)}
+#story .ph::after{content:"";position:absolute;inset:0;background-image:var(--img);background-repeat:no-repeat;background-size:contain;background-position:center 34%}
+#story .ph{background-size:cover}
+#story .ph.show{opacity:1}
+#story .ph.show::after{animation:kb 3s ease-out forwards}
 @keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.12)}}
-@media (prefers-reduced-motion:reduce){#story .ph.show{animation:none}}
+@media (prefers-reduced-motion:reduce){#story .ph.show::after{animation:none}}
 #story .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,9,11,.65) 0,rgba(5,9,11,0) 22%,rgba(5,9,11,0) 45%,rgba(5,9,11,.92) 100%)}
 #story .prog{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:3px;z-index:3}
 #story .prog span{flex:1;height:3px;background:rgba(238,229,214,.28);border-radius:2px;overflow:hidden}
@@ -1092,7 +1096,7 @@ details.more[open]>summary{margin-bottom:14px}
     ["2013","VI","Blue Ridge · Erin Gray House · 11 people",["photos/2013.jpg","photos/fun/2013b.jpg"],"A borrowed lakehouse with no shower curtains yet. “Think camping, with wifi.”"],
     ["2016","VII","Helen · Eagle Eye, again · 17 people",["photos/2016.jpg","photos/fun/2016a.jpg","photos/fun/2016b.jpg"],"Back after two years off, with a keg and a beer rifle."],
     ["2020","VIII","Tuckasegee, NC · Wolf Lake · 17 people",["photos/2020.jpg","photos/fun/2020a.jpg","photos/fun/2020b.jpg","photos/fun/2020c.jpg"],"The only one outside Georgia, and the first in early November."],
-    ["2021","IX","Morganton · 5 Star Lodge · 18 people",["photos/2021.jpg","photos/fun/2021a.jpg","photos/fun/2021b.jpg","photos/fun/2021c.jpg"],"“DO NOT TRY AND USE YOUR GPS.” A horse farm at the end of the road."],
+    ["2021","IX","Morganton · 5 Star Lodge · 18 people",["photos/fun/2021a.jpg","photos/2021.jpg","photos/fun/2021b.jpg","photos/fun/2021c.jpg"],"“DO NOT TRY AND USE YOUR GPS.” A horse farm at the end of the road."],
     ["2022","X","Morganton · Après Ski · 22 people",["photos/2022.jpg","photos/fun/2022a.jpg","photos/fun/2022b.jpg","photos/fun/2022c.jpg"],"Lake Blue Ridge, a fire pit above the dock, and the Dawgs over Tennessee."],
     ["2023","XI","Mineral Bluff · Toccoa River Mist · 18 people",["photos/2023.jpg","photos/fun/2023a.jpg","photos/fun/2023b.jpg","photos/fun/2023c.jpg"],"The river in the yard, and a trout someone actually caught."],
     ["2024","XII","Blairsville · Holly Jolly · 19 people",["photos/2024.jpg","photos/fun/2024a.jpg","photos/fun/2024b.jpg","photos/fun/2024c.jpg"],"The Christmas cabin, discovered."],
@@ -1106,7 +1110,7 @@ details.more[open]>summary{margin-bottom:14px}
   S.forEach(function(s){s[3].forEach(function(u){var im=new Image();im.src=u})});
   var sub=0;
   function dur(k){return Math.max(DUR,S[k][3].length*1900)}
-  function paint(u){front=1-front;var a=phs[front],b=phs[1-front];a.style.backgroundImage=u?"url('"+u+"')":"";a.classList.remove("show");void a.offsetWidth;a.classList.add("show");b.classList.remove("show")}
+  function paint(u){front=1-front;var a=phs[front],b=phs[1-front];a.style.backgroundImage=u?"url('"+u+"')":"";a.style.setProperty("--img",u?"url('"+u+"')":"none");a.classList.remove("show");void a.offsetWidth;a.classList.add("show");b.classList.remove("show")}
   function show(n){
     i=Math.max(0,Math.min(S.length-1,n)); elapsed=0;
     var s=S[i]; sub=0; paint(s[3][0]||"");
