@@ -411,6 +411,13 @@ details.more[open]>summary{margin-bottom:14px}
 #story.final .ph{background:radial-gradient(120% 80% at 70% 100%,rgba(255,123,51,.45),transparent 60%),linear-gradient(180deg,#0b1820,#05090b)!important;animation:none}
 .m small.menu{display:block;font-family:var(--body,inherit);font-weight:400;text-transform:none;font-size:.72rem;line-height:1.3;color:var(--frost);margin-top:5px;letter-spacing:0}
 .ess .dir{cursor:default}.ess .dir a{color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(255,123,51,.4)}.ess .dir em{font-style:normal;font-size:.58rem;color:var(--frost);letter-spacing:.04em}
+.a2hs{margin-top:10px;display:flex;gap:12px;align-items:center;border:1px dashed rgba(238,229,214,.35);border-radius:3px;padding:12px 14px;background:#0f181b}
+.a2hs img{width:42px;height:42px;border-radius:9px;flex:none}
+.a2hs div{flex:1;font-size:.82rem;color:#c8bfb1;line-height:1.4}
+.a2hs b{display:block;color:var(--bone);font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:1rem;letter-spacing:.01em;margin-bottom:2px}
+.a2hs button.x{background:none;border:0;color:var(--frost);font-size:1.1rem;cursor:pointer;align-self:flex-start;padding:0 2px}
+.a2hs button.go{margin-top:8px}
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -449,6 +456,12 @@ details.more[open]>summary{margin-bottom:14px}
   <div class="ess">
     <a href="helenback-xiv.ics" download><span>Tee times, dinners, kickoff</span><b>Add to calendar</b><small>Calendar file ↓</small></a>
     <div class="dir"><span>50 Sullivan Trail</span><b>Directions</b><small><a href="https://maps.apple.com/?address=50%20Sullivan%20Trail,%20Blairsville,%20GA%2030512" target="_blank" rel="noopener">Apple ↗</a> · <a href="https://www.google.com/maps/dir/?api=1&amp;destination=50+Sullivan+Trail,+Blairsville,+GA+30512" target="_blank" rel="noopener">Google ↗</a></small><em>Google: skip Cindy Cove</em></div>
+  </div>
+
+  <div class="a2hs" id="a2hs" hidden>
+    <img src="icon-180.png" alt="">
+    <div><b>Put it on your home screen</b><span id="a2hsTxt">It works with no signal at the cabin once you've opened it here.</span><br><button type="button" class="btn go" id="a2hsGo" hidden>Add to home screen</button></div>
+    <button type="button" class="x" id="a2hsX" aria-label="Dismiss">✕</button>
   </div>
   <div class="photodrop">
     <div>
@@ -1140,6 +1153,22 @@ details.more[open]>summary{margin-bottom:14px}
   ["pointerdown"].forEach(function(ev){el.addEventListener(ev,function(){holdT=setTimeout(function(){paused=true},180)})});
   ["pointerup","pointercancel","pointerleave"].forEach(function(ev){el.addEventListener(ev,function(){clearTimeout(holdT);if(paused){held=true;paused=false;last=0}})});
   document.addEventListener("keydown",function(e){if(!el.classList.contains("on"))return;if(e.key==="Escape")close();if(e.key==="ArrowRight")show(i+1);if(e.key==="ArrowLeft")show(i-1)});
+})();
+
+/* ---------- Add to home screen tip ---------- */
+(function(){
+  var box=document.getElementById("a2hs"),txt=document.getElementById("a2hsTxt"),go=document.getElementById("a2hsGo");
+  var standalone=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone;
+  var dismissed=false;try{dismissed=localStorage.getItem("hb14-a2hs")==="x"}catch(e){}
+  if(standalone||dismissed||!box)return;
+  var ua=navigator.userAgent, ios=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1), android=/Android/.test(ua);
+  var deferred=null;
+  if(ios){txt.innerHTML="Tap the <b style=\"display:inline;font:inherit;text-transform:none;color:var(--bone)\">Share</b> button (square with the arrow), then <b style=\"display:inline;font:inherit;text-transform:none;color:var(--bone)\">Add to Home Screen</b>. Then open the new icon once while you have signal so it works offline at the cabin."+(/CriOS|FxiOS|EdgiOS/.test(ua)?" (Works best from Safari.)":"");box.hidden=false}
+  else if(android){txt.textContent="Tap the ⋮ menu, then Add to Home screen (or Install app). It works with no signal at the cabin.";box.hidden=false}
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferred=e;go.hidden=false;txt.textContent="One tap and it's an app on your phone. It works with no signal at the cabin.";box.hidden=false});
+  go.addEventListener("click",function(){if(!deferred)return;deferred.prompt();deferred.userChoice.finally(function(){box.hidden=true;deferred=null})});
+  document.getElementById("a2hsX").addEventListener("click",function(){box.hidden=true;try{localStorage.setItem("hb14-a2hs","x")}catch(e){}});
+  window.addEventListener("appinstalled",function(){box.hidden=true});
 })();
 /* ---------- Live weather (National Weather Service) ---------- */
 (function(){
