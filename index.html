@@ -407,7 +407,7 @@ html.scoring,html.scoring body{overflow:hidden}
 #scorer .sc-prompt{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:4px 0 10px;padding:10px 12px;border-radius:10px;background:rgba(255,123,51,.14);border:1px solid rgba(255,123,51,.55);font-size:.8rem}
 #scorer .sc-prompt span{flex:1 1 100%}
 #scorer .sc-prompt b{color:var(--ember)}
-#scorer .sc-psend{flex:1;height:44px;border-radius:8px;border:0;background:var(--ember);color:#111;font-weight:700;font-size:.9rem}
+#scorer .sc-psend{flex:1 1 100%;height:44px;border-radius:8px;border:0;background:var(--ember);color:#111;font-weight:700;font-size:.9rem}
 #scorer .sc-pskip{height:44px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:none;color:var(--frost)}
 #scorer .sc-team{padding:12px 0;border-top:1px solid var(--line)}
 #scorer .sc-tn{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:1.05rem;margin-bottom:8px}
@@ -428,6 +428,10 @@ html.scoring,html.scoring body{overflow:hidden}
 #scorer .sc-board small{display:block;font-family:var(--mono);font-size:.55rem;color:var(--frost);text-transform:uppercase}
 #scorer .sc-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;font-size:.66rem;color:var(--frost)}
 #scorer .sc-clear{background:none;border:1px solid rgba(255,107,107,.5);color:#ff8a7a;font-size:.68rem;padding:8px 12px;border-radius:6px;white-space:nowrap}
+#scorer .sc-acts{display:flex;gap:6px}
+#scorer .sc-cl{background:none;border:1px solid rgba(238,229,214,.35);color:var(--bone);font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 10px;border-radius:3px}
+#scorer .sc-pclaude{flex:1;height:44px;border-radius:8px;border:1px solid rgba(238,229,214,.45);background:#162224;color:var(--bone);font-weight:700;font-size:.85rem}
+.nutlive .nsrc.hi{color:var(--ember);font-weight:600}
 #scorer .sc-chole{display:block;margin:8px auto 0;background:none;border:1px solid var(--line);color:var(--frost);font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:14px}
 #scorer .sc-undo{background:none;border:0;color:#b5371f;font-weight:700;font-size:.8rem;margin-left:6px;text-decoration:underline}
 #scorer .sc-toast{pointer-events:auto}
@@ -995,7 +999,7 @@ body.arrived .arrive{display:block}
         <div class="nl-key"></div>
       </div>
       <div class="bets" id="nlBets" hidden></div>
-      <div class="nf"><span class="legend">● birdie &nbsp;■ bogey (max)</span><span class="nbtns"><button class="btn" type="button" data-sendscores>Send scores</button><button class="btn hot" type="button" data-score>Keep score</button></span><button class="nl-clr" type="button" data-clearscores hidden>Clear scores on this phone</button></div>
+      <div class="nf"><span class="legend">● birdie &nbsp;■ bogey (max)</span><span class="nbtns"><button class="btn" type="button" data-sendscores>Text group</button><button class="btn" type="button" data-toclaude>Copy for Claude</button><button class="btn hot" type="button" data-score>Keep score</button></span><button class="nl-clr" type="button" data-clearscores hidden>Clear scores on this phone</button></div>
       <p class="nsrc" id="nlSrc"></p>
     </div>
     <div class="odds">
@@ -1745,6 +1749,18 @@ window.hbSnow=function(el){
     chartEl.querySelector(".nl-key").innerHTML=TEAMS.map(function(n,i){return '<span><i style="background:'+COL[i]+'"></i>'+esc(n)+"</span>"}).join("");
   }
   if(chartEl)chartEl.addEventListener("click",function(e){var b=e.target.closest("[data-ch]");if(!b)return;chartMode=b.dataset.ch;[].forEach.call(chartEl.querySelectorAll("[data-ch]"),function(x){x.classList.toggle("on",x===b)});drawChart(true)});
+  function claudeMsg(){
+    var c=calc(),rows=TEAMS.map(function(n,i){var a=[];for(var h=0;h<18;h++)a.push(S.s[i][h]||"-");return n+": "+a.join(" ")+"  ("+(c.T[i].thru?fmt(c.T[i].tp)+" thru "+c.T[i].thru:"no scores")+")"});
+    return "NUT CUP SCORES: please publish to the Helenback site (scores.json in peytoned21/helenback).\nHoles 1-18, - = not played yet:\n"+rows.join("\n")+"\n"+link();
+  }
+  function copyText(t,ok){
+    function fb(){var ta=document.createElement("textarea");ta.value=t;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");ok()}catch(e){}ta.remove()}
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,fb);else fb();
+  }
+  function toClaude(){copyText(claudeMsg(),function(){
+    var m="Copied. Now open the Claude app, go to the Helenback chat, and paste.";
+    if(sc.classList.contains("open"))toast(m);else{var n=document.getElementById("nlSrc");if(n){n.textContent=m;n.classList.add("hi");setTimeout(function(){n.classList.remove("hi");render()},6000)}}
+  })}
   function share(){
     var c=calc(),txt="Nut Cup "+(c.done?"final":"update")+": "+c.order.filter(function(t){return t.thru}).map(function(t){return t.name+" "+fmt(t.tp)+(t.thru===18?"":" thru "+t.thru)}).join(", ");
     if(c.any&&!c.done){var W3=oddsOf();txt+=". Live odds: "+c.order.map(function(t){return t.name+" "+american(W3[t.i])}).join(", ")}
@@ -1754,9 +1770,9 @@ window.hbSnow=function(el){
   }
   /* ---- scorer overlay ---- */
   var sc=document.createElement("div");sc.id="scorer";sc.setAttribute("role","dialog");sc.setAttribute("aria-label","Nut Cup scorer");
-  sc.innerHTML='<div class="sc-top"><button class="sc-x" type="button" aria-label="Close">✕</button><span class="mono">Nut Cup · Butternut Creek</span><button class="sc-send" type="button">Send scores</button></div>'+
+  sc.innerHTML='<div class="sc-top"><button class="sc-x" type="button" aria-label="Close">✕</button><span class="mono">Nut Cup</span><span class="sc-acts"><button class="sc-send" type="button">Text group</button><button class="sc-cl" type="button">Copy for Claude</button></span></div>'+
     '<div class="sc-dots"></div><div class="sc-hole"><button class="sc-nav prev" type="button" aria-label="Previous hole">‹</button><div class="sc-hh"><div class="sc-n"></div><div class="sc-meta"></div><div class="sc-rib"></div><button class="sc-chole" type="button" hidden>Clear hole</button></div><button class="sc-nav next" type="button" aria-label="Next hole">›</button></div>'+
-    '<div class="sc-prompt" hidden><span></span><button class="sc-psend" type="button">Text the group</button><button class="sc-pskip" type="button">Later</button></div><div class="sc-teams"></div><div class="sc-board"></div><div class="sc-foot"><span>Bogey max: nothing worse than a bogey. Tap a picked score again to remove it.</span><button class="sc-clear" type="button">Clear scorecard</button></div><div class="sc-toast" hidden></div>';
+    '<div class="sc-prompt" hidden><span></span><button class="sc-psend" type="button">1 · Text the group</button><button class="sc-pclaude" type="button">2 · Copy for Claude</button><button class="sc-pskip" type="button">Done</button></div><div class="sc-teams"></div><div class="sc-board"></div><div class="sc-foot"><span>Bogey max: nothing worse than a bogey. Tap a picked score again to remove it.</span><button class="sc-clear" type="button">Clear scorecard</button></div><div class="sc-toast" hidden></div>';
   document.body.appendChild(sc);
   var cur=0,clearArm=0,advT=null;
   function firstOpen(){for(var h=0;h<18;h++){if(!S.s[0][h]||!S.s[1][h]||!S.s[2][h])return h}return 17}
@@ -1792,7 +1808,9 @@ window.hbSnow=function(el){
     var b=e.target.closest("button");if(!b)return;
     if(b.classList.contains("sc-x"))return close();
     if(b.classList.contains("sc-send"))return share();
+    if(b.classList.contains("sc-cl"))return toClaude();
     if(b.classList.contains("sc-psend")){sc.querySelector(".sc-prompt").hidden=true;return share()}
+    if(b.classList.contains("sc-pclaude")){b.textContent="✓ Copied for Claude";return toClaude()}
     if(b.classList.contains("sc-pskip")){sc.querySelector(".sc-prompt").hidden=true;return}
     if(b.classList.contains("prev")&&cur>0){cur--;return paintScorer()}
     if(b.classList.contains("next")&&cur<17){cur++;return paintScorer()}
@@ -1806,7 +1824,7 @@ window.hbSnow=function(el){
       if(S.s[i][cur]&&S.s[i][cur]<par(cur))celebrate(i,v,S.s[i][cur]===1?"ACE!":S.s[i][cur]<=par(cur)-2?"EAGLE!":"BIRDIE!");
       render();
       var full=S.s[0][cur]&&S.s[1][cur]&&S.s[2][cur];
-      if(full&&(cur+1)%3===0){var c2=calc(),pr=sc.querySelector(".sc-prompt");pr.querySelector("span").innerHTML=(cur===17?"<b>That's 18.</b> Send the final":cur===8?"<b>At the turn.</b> Send the update":"<b>Thru "+(cur+1)+".</b> Send the update")+" · "+c2.order.filter(function(t){return t.thru}).map(function(t){return esc(t.name.split(" ")[0])+" "+fmt(t.tp)}).join(", ");pr.hidden=false}
+      if(full&&(cur+1)%3===0){var c2=calc(),pr=sc.querySelector(".sc-prompt");pr.querySelector("span").innerHTML=(cur===17?"<b>That's 18.</b> Send the final":cur===8?"<b>At the turn.</b> Send the update":"<b>Thru "+(cur+1)+".</b> Send the update")+" · "+c2.order.filter(function(t){return t.thru}).map(function(t){return esc(t.name.split(" ")[0])+" "+fmt(t.tp)}).join(", ");pr.querySelector(".sc-pclaude").textContent="2 · Copy for Claude";pr.hidden=false}
       clearTimeout(advT);if(full&&cur<17){var h0=cur;advT=setTimeout(function(){if(cur===h0){cur++;paintScorer()}},650)}
     }
   });
@@ -1815,6 +1833,7 @@ window.hbSnow=function(el){
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&sc.classList.contains("open"))close()});
   [].forEach.call(document.querySelectorAll("[data-score]"),function(b){b.addEventListener("click",function(e){e.preventDefault();open()})});
   [].forEach.call(document.querySelectorAll("[data-clearscores]"),function(b){var arm=0;b.addEventListener("click",function(){if(Date.now()-arm<4000){S=blank();S.at=Date.now();save();render();b.textContent="Cleared";setTimeout(function(){b.textContent="Clear scores on this phone"},2000);arm=0}else{arm=Date.now();b.textContent="Tap again to clear";setTimeout(function(){if(Date.now()-arm>=3900)b.textContent="Clear scores on this phone"},4000)}})});
+  [].forEach.call(document.querySelectorAll("[data-toclaude]"),function(b){b.addEventListener("click",function(e){e.preventDefault();toClaude()})});
   [].forEach.call(document.querySelectorAll("[data-sendscores]"),function(b){b.addEventListener("click",function(e){e.preventDefault();share()})});
   if(/nut=demo/.test(location.search)){var D=[[4,4,3,3,4,5,4,2,4,4,3,3,5],[5,4,4,3,5,4,4,3,4,4,4],[5,5,5,4,4,6,4,3,5,4,5,3,5]];S=blank();D.forEach(function(r,i){r.forEach(function(v,h){S.s[i][h]=Math.min(v,par(h)+1)})});S.from="here"}
   absorb();window.addEventListener("hashchange",function(){absorb();render()});
