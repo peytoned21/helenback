@@ -1641,13 +1641,13 @@ window.hbSnow=function(el){
   var LINES=[[0,2,2.5],[0,1,3.5],[2,1,1.5]];
   var COL=["#ffb347","#6ec6ff","#b6e36a"];
   var KEY="hb14-nut";
-  /* live odds: each team's per-hole scoring rate starts from the opening board (Mack & Nick −3, Brett & Kunal −1.5, Peyton & Nathan E over 18),
-     blends in how they're actually playing, then simulates the holes left. Bogey max keeps every hole to birdie/par/bogey (eagles on par 5s). */
-  var PRIOR=[-3,0,-1.5];
+  /* live odds: each team's per-hole scoring rate starts from the opening board (Mack & Nick −3.5, Brett & Kunal −1.75, Peyton & Nathan E over 18),
+     blends in how they're actually playing (lightly: 18 holes of form counts a quarter as much as the board), then simulates the holes left. Bogey max keeps every hole to birdie/par/bogey (eagles on par 5s). */
+  var PRIOR=[-3.5,0,-1.75];
   function oddsOf(lim,N){
-    lim=lim==null?18:lim;N=N||4000;var K=18,seed=12345,rnd=function(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+    lim=lim==null?18:lim;N=N||4000;var K=72,seed=12345,rnd=function(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
     var info=[0,1,2].map(function(i){var x=0,left=[];for(var h=0;h<18;h++){var v=h<lim?S.s[i][h]:0;if(v)x+=v-par(h);else left.push(h)}var m=(PRIOR[i]/18*K+x)/(K+18-left.length);
-      var pb=Math.min(.6,Math.max(.02,.17-.55*m)),pbo=Math.min(.6,Math.max(.02,.17+.55*m));return {x:x,left:left,pb:pb,pbo:pbo}});
+      var pb=Math.min(.6,Math.max(.02,.28-.55*m)),pbo=Math.min(.6,Math.max(.02,.28+.55*m));return {x:x,left:left,pb:pb,pbo:pbo}});
     var w=[0,0,0];
     for(var n=0;n<N;n++){var t=info.map(function(f){var s=f.x;for(var k=0;k<f.left.length;k++){var h=f.left[k],pe=par(h)===5?f.pb*.12:0,r=rnd();s+=r<pe?-2:r<pe+f.pb?-1:r<pe+f.pb+f.pbo?1:0}return s});
       var best=Math.min(t[0],t[1],t[2]),ws=[0,1,2].filter(function(i){return t[i]===best});ws.forEach(function(i){w[i]+=1/ws.length})}
