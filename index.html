@@ -377,6 +377,53 @@ details.more[open]>summary{margin-bottom:14px}
 .nutlive .nf{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;flex-wrap:wrap}
 .nutlive .nf small{font-size:.7rem;color:var(--frost)}
 .nutlive .legend{font-family:var(--mono);font-size:.58rem;color:var(--frost);letter-spacing:.05em}
+.nutlive .nbtns{display:flex;gap:8px;flex-wrap:wrap}
+.btn.hot{background:var(--ember);color:#111;border-color:var(--ember);font-weight:700}
+.nutlive .nsrc{padding:0 14px 12px;font-size:.72rem;color:var(--frost);margin:0}
+.hcard{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.72rem;margin-top:10px}
+.hcard th{font-weight:400;color:var(--frost);text-transform:uppercase;letter-spacing:.08em;font-size:.6rem;text-align:center;padding:6px 2px;border-bottom:1px solid var(--line)}
+.hcard td{text-align:center;padding:6px 2px;border-bottom:1px dashed rgba(238,229,214,.07)}
+.hcard tr.tot td{color:var(--ember);font-weight:700;border-bottom:1px solid var(--line)}
+html.scoring,html.scoring body{overflow:hidden}
+#scorer{position:fixed;inset:0;z-index:1100;background:radial-gradient(120% 60% at 50% 0,#1d2b2c,#0a1012 70%);display:none;flex-direction:column;padding:max(10px,env(safe-area-inset-top)) 14px max(12px,env(safe-area-inset-bottom));overflow-y:auto;touch-action:pan-y}
+#scorer.open{display:flex}
+#scorer .sc-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#scorer .sc-top .mono{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--frost)}
+#scorer .sc-x{background:none;border:0;color:var(--bone);font-size:1.3rem;padding:6px 8px}
+#scorer .sc-send{background:none;border:1px solid rgba(255,123,51,.6);color:var(--ember);font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 10px;border-radius:3px}
+#scorer .sc-dots{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;margin:10px 0 4px}
+#scorer .sc-dots button{height:26px;border-radius:13px;border:1px solid var(--line);background:transparent;color:var(--frost);font-family:var(--mono);font-size:.62rem;padding:0}
+#scorer .sc-dots button.part{border-color:rgba(255,123,51,.5);color:var(--bone)}
+#scorer .sc-dots button.full{background:#22343a;color:var(--bone);border-color:#22343a}
+#scorer .sc-dots button.on{background:var(--ember);color:#111;border-color:var(--ember);font-weight:700}
+#scorer .sc-hole{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;margin:8px 0 6px}
+#scorer .sc-nav{height:56px;background:none;border:0;color:var(--bone);font-size:2.2rem;line-height:1}
+#scorer .sc-nav:disabled{opacity:.2}
+#scorer .sc-hh{text-align:center}
+#scorer .sc-n{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:2.6rem;line-height:1}
+#scorer .sc-n b{color:var(--ember);font-size:1.25em}
+#scorer .sc-meta{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:6px;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--frost)}
+#scorer .sc-meta span:first-child{color:var(--bone)}
+#scorer .sc-team{padding:12px 0;border-top:1px solid var(--line)}
+#scorer .sc-tn{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:1.05rem;margin-bottom:8px}
+#scorer .sc-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(60px,1fr));gap:8px}
+#scorer .sc-opts button{height:64px;border-radius:10px;border:1px solid var(--line);background:#101a1c;color:var(--bone);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:transform .08s}
+#scorer .sc-opts button:active{transform:scale(.96)}
+#scorer .sc-opts b{font-family:var(--display);font-weight:900;font-size:1.7rem;line-height:1}
+#scorer .sc-opts small{font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--frost)}
+#scorer .sc-opts button.under b{color:#ff8a7a}
+#scorer .sc-opts button.sel{background:#e9e1d3;border-color:#e9e1d3}
+#scorer .sc-opts button.sel b,#scorer .sc-opts button.sel small{color:#111}
+#scorer .sc-opts button.sel.under{background:#c0392b;border-color:#c0392b}#scorer .sc-opts button.sel.under b,#scorer .sc-opts button.sel.under small{color:#fff}
+#scorer .sc-board{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:auto;padding-top:14px}
+#scorer .sc-board div{background:#0d1517;border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center}
+#scorer .sc-board span{display:block;font-size:.66rem;color:var(--frost);line-height:1.2;min-height:2.4em}
+#scorer .sc-board b{font-family:var(--display);font-weight:900;font-size:1.5rem}
+#scorer .sc-board b.u{color:#ff6b6b}
+#scorer .sc-board small{display:block;font-family:var(--mono);font-size:.55rem;color:var(--frost);text-transform:uppercase}
+#scorer .sc-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;font-size:.66rem;color:var(--frost)}
+#scorer .sc-clear{background:none;border:0;color:#7d8f95;font-size:.66rem;text-decoration:underline}
+#scorer .sc-toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--bone);color:#111;padding:10px 14px;border-radius:20px;font-size:.8rem;box-shadow:0 8px 24px rgba(0,0,0,.4);white-space:nowrap}
 .nutnow{margin-top:14px;border:1px solid rgba(255,123,51,.5);border-left:4px solid var(--ember);border-radius:3px;padding:10px 12px;background:#0d1518;display:block;color:inherit;text-decoration:none}
 .nutnow span{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ember)}
 .nutnow div{font-size:.9rem;margin-top:4px;line-height:1.5}
@@ -862,12 +909,38 @@ body.arrived .arrive{display:block}
       <div class="team"><span class="mono">Team 03</span><div class="pair">Brett <i>&amp;</i> Kunal</div><p>Apology issued in advance. Shoes should hold.</p></div>
     </div>
   </div>
+    <details class="more holes"><summary>Hole by hole · Butternut Creek card</summary>
+      <table class="hcard"><thead><tr><th>Hole</th><th>Par</th><th>Hcp</th><th>Blue</th><th>Gold</th></tr></thead><tbody>
+        <tr><td>1</td><td>5</td><td>7</td><td>502</td><td>538</td></tr>
+        <tr><td>2</td><td>4</td><td>3</td><td>335</td><td>381</td></tr>
+        <tr><td>3</td><td>4</td><td>9</td><td>382</td><td>405</td></tr>
+        <tr><td>4</td><td>3</td><td>15</td><td>144</td><td>158</td></tr>
+        <tr><td>5</td><td>4</td><td>11</td><td>471</td><td>444</td></tr>
+        <tr><td>6</td><td>5</td><td>5</td><td>452</td><td>500</td></tr>
+        <tr><td>7</td><td>4</td><td>13</td><td>306</td><td>356</td></tr>
+        <tr><td>8</td><td>3</td><td>17</td><td>129</td><td>138</td></tr>
+        <tr><td>9</td><td>4</td><td>1</td><td>396</td><td>412</td></tr>
+        <tr class="tot"><td>Out</td><td>36</td><td></td><td>3,117</td><td>3,332</td></tr>
+        <tr><td>10</td><td>4</td><td>6</td><td>388</td><td>425</td></tr>
+        <tr><td>11</td><td>4</td><td>8</td><td>305</td><td>339</td></tr>
+        <tr><td>12</td><td>3</td><td>16</td><td>185</td><td>204</td></tr>
+        <tr><td>13</td><td>5</td><td>10</td><td>470</td><td>511</td></tr>
+        <tr><td>14</td><td>4</td><td>14</td><td>268</td><td>289</td></tr>
+        <tr><td>15</td><td>4</td><td>2</td><td>368</td><td>407</td></tr>
+        <tr><td>16</td><td>4</td><td>12</td><td>296</td><td>309</td></tr>
+        <tr><td>17</td><td>3</td><td>18</td><td>128</td><td>151</td></tr>
+        <tr><td>18</td><td>5</td><td>4</td><td>498</td><td>525</td></tr>
+        <tr class="tot"><td>In</td><td>36</td><td></td><td>2,906</td><td>3,160</td></tr>
+      </tbody></table>
+      <p class="note">Par 72. One online card lists hole 5 as a par 5; trust the card in the cart if it differs and tell Peyton.</p>
+    </details>
     <div class="nutlive" id="nutLive">
       <div class="nh"><b>Nut Cup · Leaderboard</b><span class="st" id="nlSt">Tees off Fri 9:10</span></div>
       <div class="champ" id="nlChamp" hidden><span>Nut Cup champions</span><div id="nlChampT"></div></div>
       <div id="nlRows"></div>
       <div class="bets" id="nlBets" hidden></div>
-      <div class="nf"><span class="legend">● birdie &nbsp;■ bogey &nbsp;▁ capped at bogey</span><a class="btn" href="https://docs.google.com/spreadsheets/d/1EaH46JvbosmSLDyjwsH3n55RYkjDfzuAWmbGEM5aTuM/edit" target="_blank" rel="noopener">Scorekeepers: enter scores ↗</a></div>
+      <div class="nf"><span class="legend">● birdie &nbsp;■ bogey (max)</span><span class="nbtns"><button class="btn" type="button" data-sendscores>Send scores</button><button class="btn hot" type="button" data-score>Keep score</button></span></div>
+      <p class="nsrc" id="nlSrc"></p>
     </div>
     <div class="odds">
       <div class="oh"><b>The board</b><span class="mono">Odds to win the Nut Cup</span></div>
@@ -1500,71 +1573,124 @@ window.hbSnow=function(el){
   }
   load(); setInterval(load,60000);
 })();
-/* ---------- Nut Cup live leaderboard (reads the Google Sheet scorecard) ---------- */
+/* ---------- Nut Cup: native scorer + leaderboard (stored on the phone, shared by link) ---------- */
 (function(){
-  var SID="1EaH46JvbosmSLDyjwsH3n55RYkjDfzuAWmbGEM5aTuM";
   var TEAMS=["Mack & Nick","Peyton & Nathan","Brett & Kunal"];
-  var LINES=[[0,2,2.5],[0,1,3.5],[2,1,1.5]]; /* fav, dog, strokes */
+  /* par, handicap, blue yds, gold yds (Butternut Creek card) */
+  var H=[[5,7,502,538],[4,3,335,381],[4,9,382,405],[3,15,144,158],[4,11,471,444],[5,5,452,500],[4,13,306,356],[3,17,129,138],[4,1,396,412],[4,6,388,425],[4,8,305,339],[3,16,185,204],[5,10,470,511],[4,14,268,289],[4,2,368,407],[4,12,296,309],[3,18,128,151],[5,4,498,525]];
+  var LINES=[[0,2,2.5],[0,1,3.5],[2,1,1.5]];
+  var KEY="hb14-nut";
   var rowsEl=document.getElementById("nlRows"); if(!rowsEl)return;
-  var st=document.getElementById("nlSt"),champ=document.getElementById("nlChamp"),champT=document.getElementById("nlChampT"),bets=document.getElementById("nlBets");
+  var st=document.getElementById("nlSt"),champ=document.getElementById("nlChamp"),champT=document.getElementById("nlChampT"),bets=document.getElementById("nlBets"),src=document.getElementById("nlSrc");
   var nn=document.getElementById("nutNow"),nnT=document.getElementById("nutNowT"),nnL=document.getElementById("nutNowL");
-  var q=location.search, qn=(q.match(/now=([^&]+)/)||[])[1];
+  var qn=(location.search.match(/now=([^&]+)/)||[])[1];
   function now(){return qn?new Date(decodeURIComponent(qn)).getTime():Date.now()}
-  var TEE=new Date("2026-11-06T09:10:00-05:00").getTime(), WIN0=new Date("2026-11-06T08:30:00-05:00").getTime(), WIN1=new Date("2026-11-06T19:00:00-05:00").getTime(), NOW1=new Date("2026-11-06T22:30:00-05:00").getTime();
+  var TEE=new Date("2026-11-06T09:10:00-05:00").getTime(),SHOW0=new Date("2026-11-06T08:30:00-05:00").getTime(),SHOW1=new Date("2026-11-06T22:30:00-05:00").getTime();
+  function blank(){return {s:[0,1,2].map(function(){return H.map(function(){return 0})}),t:[0,1,2].map(function(){return H.map(function(){return 0})}),from:"",at:0}}
+  var S=blank();
+  try{var j=JSON.parse(localStorage.getItem(KEY)||"null");if(j&&j.s&&j.s.length===3)S=j}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+  function par(h){return H[h][0]}
   function fmt(n){return n===0?"E":(n>0?"+"+n:"−"+(-n))}
   function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
-  function render(par,grid){ /* grid[hole][col 0..5] raw numbers or null */
+  function tm(ms){var d=new Date(ms);return d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}
+  /* ---- share link: 54 digits, 0 = blank ---- */
+  function encode(){return S.s.map(function(r){return r.join("")}).join("")}
+  function link(){return location.origin+location.pathname+"#nut="+encode()+"."+Math.floor(Date.now()/1000).toString(36)}
+  function absorb(){
+    var m=location.hash.match(/nut=([0-9]{54})(?:\.([0-9a-z]+))?/); if(!m)return;
+    var ts=m[2]?parseInt(m[2],36)*1000:Date.now(),code=m[1],changed=false;
+    for(var i=0;i<3;i++)for(var h=0;h<18;h++){var v=+code[i*18+h];
+      if(v&&v!==S.s[i][h]&&(!S.s[i][h]||ts>=S.t[i][h])){S.s[i][h]=v;S.t[i][h]=ts;changed=true}}
+    S.from="link";S.at=ts;save();
+    try{history.replaceState(null,"",location.pathname+location.search+"#nutcup")}catch(e){}
+    setTimeout(function(){var el=document.getElementById("nutcup");if(el)el.scrollIntoView({behavior:"smooth"})},400);
+  }
+  function calc(){
     var any=false;
-    var T=TEAMS.map(function(name,ti){
-      var tot=0,tp=0,thru=0,cells=[],birdies=0,r2=0;
-      for(var r=0;r<2;r++)for(var h=0;h<18;h++){
-        var v=grid[h][ti+3*r],p=par[h];
-        if(v==null||isNaN(v)){if(r===0)cells.push("<i>"+(h+1)+"</i>");continue}
-        any=true;var c=Math.min(v,p+1);tot+=c;tp+=c-p;thru++;if(r)r2++;if(c<p)birdies++;
-        if(r===0){var k=c<=p-2?"eg":c<p?"b":c===p?"p":(v>p+1?"cap":"bo");cells.push('<i class="'+k+'">'+c+"</i>")}
-      }
-      return {name:name,i:ti,tot:tot,tp:tp,thru:thru,cells:cells,birdies:birdies,r2:r2};
-    });
-    var holes=T.some(function(t){return t.r2})?36:18;
-    var order=T.slice().sort(function(a,b){return a.tp-b.tp||b.thru-a.thru||a.i-b.i});
-    var done=T.every(function(t){return t.thru>=holes});
-    var n=now(), live=any&&!done;
-    st.className="st"+(live?" on":""); st.textContent=done?"Final":live?"Live":(n<TEE?"Tees off Fri 9:10":"Waiting on the first score");
+    var T=TEAMS.map(function(name,i){var tot=0,tp=0,thru=0,b=0;
+      for(var h=0;h<18;h++){var v=S.s[i][h];if(!v)continue;any=true;tot+=v;tp+=v-par(h);thru++;if(v<par(h))b++}
+      return {name:name,i:i,tot:tot,tp:tp,thru:thru,birdies:b}});
+    var order=T.slice().sort(function(a,b){return (b.thru?0:1)-(a.thru?0:1)||a.tp-b.tp||b.thru-a.thru||a.i-b.i});
+    return {T:T,order:order,any:any,done:T.every(function(t){return t.thru===18})};
+  }
+  function holeCells(i){var out="";for(var h=0;h<18;h++){var v=S.s[i][h],p=par(h),k=!v?"":v<=p-2?"eg":v<p?"b":v===p?"p":"bo";out+='<i class="'+k+'">'+(v||h+1)+"</i>"}return out}
+  function render(){
+    var c=calc(),T=c.T,order=c.order,any=c.any,done=c.done,n=now();
+    st.className="st"+(any&&!done?" on":"");st.textContent=done?"Final":any?"Live":(n<TEE?"Tees off Fri 9:10":"Waiting on the first score");
     var pos=0,prev=null;
     rowsEl.innerHTML=order.map(function(t,k){
       if(prev===null||t.tp!==prev){pos=k+1;prev=t.tp}
-      var tied=order.filter(function(o){return o.tp===t.tp}).length>1&&any;
+      var tied=t.thru&&order.filter(function(o){return o.thru&&o.tp===t.tp}).length>1;
       var cls=t.tp<0?"u":t.tp===0?"e":"o";
-      return '<div class="nl-row'+(k===0&&any?" lead":"")+'"><span class="pos">'+(any?(tied?"T":"")+pos:"–")+'</span><span class="tm">'+esc(t.name)+'<small>'+(t.thru?t.tot+" strokes"+(t.birdies?" · "+t.birdies+" birdie"+(t.birdies>1?"s":""):""):"No scores yet")+'</small></span><span class="thru">'+(t.thru>=holes?"F":t.thru?"Thru "+t.thru:"—")+'</span><span class="tp '+cls+'">'+(t.thru?fmt(t.tp):"")+'</span><div class="nl-holes">'+t.cells.join("")+"</div></div>";
+      return '<div class="nl-row'+(k===0&&any?" lead":"")+'"><span class="pos">'+(t.thru?(tied?"T":"")+pos:"–")+'</span><span class="tm">'+esc(t.name)+"<small>"+(t.thru?t.tot+" strokes"+(t.birdies?" · "+t.birdies+" birdie"+(t.birdies>1?"s":""):""):"No scores yet")+'</small></span><span class="thru">'+(t.thru===18?"F":t.thru?"Thru "+t.thru:"")+'</span><span class="tp '+cls+'">'+(t.thru?fmt(t.tp):"")+'</span><div class="nl-holes">'+holeCells(t.i)+"</div></div>";
     }).join("");
     if(done){champ.hidden=false;var w=order.filter(function(o){return o.tp===order[0].tp});champT.textContent=w.map(function(o){return o.name}).join(" / ")+(w.length>1?" (tie)":"")+" · "+fmt(order[0].tp)}else champ.hidden=true;
-    /* bets: compare to-par (same holes) against the lines */
-    if(any){
-      var h=LINES.map(function(L){var f=T[L[0]],d=T[L[1]];if(!f.thru||!d.thru)return "";
-        var m=d.tp-f.tp; /* strokes fav is ahead by */
-        var cov=m>L[2];
-        var lead=m===0?"All square":(m>0?f.name+" by "+m:d.name+" by "+(-m));
-        return "<div><span>"+esc(f.name)+" −"+L[2]+" vs "+esc(d.name)+"</span><b>"+esc(lead)+' · <span class="'+(cov?"ok":"")+'">'+esc(cov?f.name:d.name)+" covering"+"</span></b></div>"}).join("");
-      var P=T[1],B=T[2],prop=(P.thru&&B.thru)?(P.tp<B.tp?"Cashing":"Not yet"):"";
-      if(prop)h+="<div><span>Prop: Peyton &amp; Nathan beat Brett &amp; Kunal (+195)</span><b>"+prop+"</b></div>";
-      h='<div class="bh">Side bets</div>'+h;bets.innerHTML=h;bets.hidden=!h;
+    var h="";
+    if(any){h=LINES.map(function(L){var f=T[L[0]],d=T[L[1]];if(!f.thru||!d.thru)return "";
+        var m=d.tp-f.tp,cov=m>L[2],lead=m===0?"All square":(m>0?f.name+" by "+m:d.name+" by "+(-m));
+        return "<div><span>"+esc(f.name)+" −"+L[2]+" vs "+esc(d.name)+"</span><b>"+esc(lead)+' · <span class="'+(cov?"ok":"")+'">'+esc(cov?f.name:d.name)+" covering</span></b></div>"}).join("");
+      var P=T[1],B=T[2];if(P.thru&&B.thru)h+="<div><span>Prop: Peyton &amp; Nathan beat Brett &amp; Kunal (+195)</span><b>"+(P.tp<B.tp?"Cashing":"Not yet")+"</b></div>"}
+    bets.innerHTML=h?'<div class="bh">Side bets</div>'+h:"";bets.hidden=!h;
+    src.textContent=!any?"Scores are kept on the scorekeeper's phone. Tap Keep score to start.":S.from==="link"?"From a shared link · updated "+tm(S.at)+". Ask the scorekeeper to send a fresh one.":"Scored on this phone. Tap Send scores to update the group.";
+    if(nn){var show=n>=SHOW0&&n<SHOW1;nn.hidden=!show;
+      if(show&&!any){nnL.textContent="Nut Cup · Scorekeeper";nnT.innerHTML="Tap here, then <b>Keep score</b>. One phone scores all three teams."}
+      if(show&&any){nnL.textContent=done?"Nut Cup · Final":"Nut Cup · Live";nnT.innerHTML=order.filter(function(t){return t.thru}).map(function(t,k){return (k?" &nbsp;·&nbsp; ":"")+"<b>"+fmt(t.tp)+"</b> "+esc(t.name)+(t.thru===18?"":" ("+t.thru+")")}).join("")}}
+    if(sc&&sc.classList.contains("open"))paintScorer();
+  }
+  function share(){
+    var c=calc(),txt="Nut Cup "+(c.done?"final":"update")+": "+c.order.filter(function(t){return t.thru}).map(function(t){return t.name+" "+fmt(t.tp)+(t.thru===18?"":" thru "+t.thru)}).join(", ");
+    var u=link();
+    if(navigator.share){navigator.share({title:"Nut Cup",text:txt,url:u}).catch(function(){})}
+    else if(navigator.clipboard){navigator.clipboard.writeText(txt+"\n"+u).then(function(){toast("Link copied. Paste it in the group text.")})}
+  }
+  /* ---- scorer overlay ---- */
+  var sc=document.createElement("div");sc.id="scorer";sc.setAttribute("role","dialog");sc.setAttribute("aria-label","Nut Cup scorer");
+  sc.innerHTML='<div class="sc-top"><button class="sc-x" type="button" aria-label="Close">✕</button><span class="mono">Nut Cup · Butternut Creek</span><button class="sc-send" type="button">Send scores</button></div>'+
+    '<div class="sc-dots"></div><div class="sc-hole"><button class="sc-nav prev" type="button" aria-label="Previous hole">‹</button><div class="sc-hh"><div class="sc-n"></div><div class="sc-meta"></div></div><button class="sc-nav next" type="button" aria-label="Next hole">›</button></div>'+
+    '<div class="sc-teams"></div><div class="sc-board"></div><div class="sc-foot"><span>Bogey max: you can\'t enter worse than a bogey.</span><button class="sc-clear" type="button">Clear all</button></div><div class="sc-toast" hidden></div>';
+  document.body.appendChild(sc);
+  var cur=0,clearArm=0,advT=null;
+  function firstOpen(){for(var h=0;h<18;h++){if(!S.s[0][h]||!S.s[1][h]||!S.s[2][h])return h}return 17}
+  function toast(m){var t=sc.querySelector(".sc-toast");t.textContent=m;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(function(){t.hidden=true},2200)}
+  function paintScorer(){
+    var p=par(cur),hd=H[cur];
+    sc.querySelector(".sc-n").innerHTML="Hole <b>"+(cur+1)+"</b>";
+    sc.querySelector(".sc-meta").innerHTML="<span>Par "+p+"</span><span>"+hd[2]+" yds blue · "+hd[3]+" gold</span><span>Hcp "+hd[1]+"</span>";
+    var d="";for(var h=0;h<18;h++){var full=S.s[0][h]&&S.s[1][h]&&S.s[2][h],some=S.s[0][h]||S.s[1][h]||S.s[2][h];d+='<button type="button" data-h="'+h+'" class="'+(h===cur?"on ":"")+(full?"full":some?"part":"")+'">'+(h+1)+"</button>"}
+    sc.querySelector(".sc-dots").innerHTML=d;
+    var opts=[];for(var v=Math.max(1,p-2);v<=p+1;v++)opts.push(v);
+    var lab=function(v){var r=v-p;return v===1?"Ace":r<=-2?"Eagle":r===-1?"Birdie":r===0?"Par":"Bogey"};
+    sc.querySelector(".sc-teams").innerHTML=TEAMS.map(function(name,i){var val=S.s[i][cur];
+      return '<div class="sc-team"><div class="sc-tn">'+esc(name)+'</div><div class="sc-opts">'+opts.map(function(v){var r=v-p;return '<button type="button" data-t="'+i+'" data-v="'+v+'" class="'+(val===v?"sel ":"")+(r<0?"under":r===0?"even":"over")+'"><b>'+v+"</b><small>"+lab(v)+"</small></button>"}).join("")+"</div></div>"}).join("");
+    var c=calc();
+    sc.querySelector(".sc-board").innerHTML=c.order.map(function(t){return '<div><span>'+esc(t.name)+'</span><b class="'+(t.tp<0?"u":"")+'">'+(t.thru?fmt(t.tp):"–")+"</b><small>"+(t.thru===18?"F":t.thru?"thru "+t.thru:"")+"</small></div>"}).join("");
+    sc.querySelector(".prev").disabled=cur===0;sc.querySelector(".next").disabled=cur===17;
+  }
+  function open(){cur=firstOpen();sc.classList.add("open");document.documentElement.classList.add("scoring");paintScorer()}
+  function close(){sc.classList.remove("open");document.documentElement.classList.remove("scoring")}
+  sc.addEventListener("click",function(e){
+    var b=e.target.closest("button");if(!b)return;
+    if(b.classList.contains("sc-x"))return close();
+    if(b.classList.contains("sc-send"))return share();
+    if(b.classList.contains("prev")&&cur>0){cur--;return paintScorer()}
+    if(b.classList.contains("next")&&cur<17){cur++;return paintScorer()}
+    if(b.dataset.h){cur=+b.dataset.h;return paintScorer()}
+    if(b.classList.contains("sc-clear")){if(Date.now()-clearArm<3000){S=blank();save();render();toast("Scorecard cleared")}else{clearArm=Date.now();toast("Tap Clear all again to wipe every score")}return}
+    if(b.dataset.t){var i=+b.dataset.t,v=+b.dataset.v;S.s[i][cur]=S.s[i][cur]===v?0:v;S.t[i][cur]=Date.now();S.from="here";S.at=Date.now();save();
+      if(navigator.vibrate)try{navigator.vibrate(8)}catch(x){}
+      render();
+      clearTimeout(advT);if(S.s[0][cur]&&S.s[1][cur]&&S.s[2][cur]&&cur<17){var h0=cur;advT=setTimeout(function(){if(cur===h0){cur++;paintScorer()}},650)}
     }
-    /* right-now card */
-    if(nn){var show=any&&n>=WIN0&&n<NOW1;nn.hidden=!show;
-      if(show){nnL.textContent=done?"Nut Cup · Final":"Nut Cup · Live";nnT.innerHTML=order.map(function(t,k){return (k?" &nbsp;·&nbsp; ":"")+"<b>"+fmt(t.tp)+"</b> "+esc(t.name)+(t.thru>=holes||!t.thru?"":" ("+t.thru+")")}).join("")}}
-  }
-  function parse(tbl){var par=[],grid=[];(tbl.rows||[]).slice(0,18).forEach(function(r,h){var c=r.c||[];par[h]=c[1]&&c[1].v!=null?+c[1].v:4;grid[h]=[];for(var j=0;j<6;j++){var x=c[2+j];var v=x&&x.v!=null&&x.v!==""?parseFloat(x.v):null;grid[h][j]=(v!=null&&!isNaN(v)&&v>0)?Math.round(v):null}});while(grid.length<18){grid.push([null,null,null,null,null,null]);par.push(4)}return [par,grid]}
-  var seq=0;
-  function load(){
-    if(/nut=demo/.test(q)){var D=[[5,4,4,3,4,5,4,3,4,4,4,3,5,4,4,4,3,5],[[4,5,5],[4,4,5],[3,4,6],[3,3,4],[4,5,4],[5,4,7],[4,4,4],[2,3,3],[4,4,5],[4,4,4],[3,4,5],[3,null,3],[5,null,5],[null,null,null],[null,null,null],[null,null,null],[null,null,null],[null,null,null]].map(function(r){return r.concat([null,null,null])})];render(D[0],D[1]);return}
-    var cb="__nut"+(++seq),s=document.createElement("script");
-    window[cb]=function(j){try{if(j&&j.status!=="error"&&j.table){var P=parse(j.table);render(P[0],P[1])}}catch(e){} delete window[cb];s.remove()};
-    s.onerror=function(){delete window[cb];s.remove()};
-    s.src="https://docs.google.com/spreadsheets/d/"+SID+"/gviz/tq?tqx=out:json;responseHandler:"+cb+"&sheet=Scores&range=A5:H22&headers=0&t="+Date.now();
-    document.head.appendChild(s);
-  }
-  (function(){var g=[],p=[5,4,4,3,4,5,4,3,4,4,4,3,5,4,4,4,3,5];for(var h=0;h<18;h++)g.push([null,null,null,null,null,null]);render(p,g)})();
-  load(); setInterval(function(){var n=now();if(n>=WIN0&&n<WIN1)load()},30000);
+  });
+  var sx=null;sc.addEventListener("touchstart",function(e){sx=e.touches[0].clientX},{passive:true});
+  sc.addEventListener("touchend",function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(dx)>70){if(dx<0&&cur<17)cur++;else if(dx>0&&cur>0)cur--;paintScorer()}});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&sc.classList.contains("open"))close()});
+  [].forEach.call(document.querySelectorAll("[data-score]"),function(b){b.addEventListener("click",function(e){e.preventDefault();open()})});
+  [].forEach.call(document.querySelectorAll("[data-sendscores]"),function(b){b.addEventListener("click",function(e){e.preventDefault();share()})});
+  if(/nut=demo/.test(location.search)){var D=[[4,4,3,3,4,5,4,2,4,4,3,3,5],[5,4,4,3,5,4,4,3,4,4,4],[5,5,5,4,4,6,4,3,5,4,5,3,5]];S=blank();D.forEach(function(r,i){r.forEach(function(v,h){S.s[i][h]=Math.min(v,par(h)+1)})});S.from="here"}
+  absorb();window.addEventListener("hashchange",function(){absorb();render()});
+  render();
 })();
 /* ---------- Live Blairsville sky: real sun, moon, weather, firepit ---------- */
 (function(){
