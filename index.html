@@ -1660,7 +1660,8 @@ window.hbSnow=function(el){
   function blank(){return {s:[0,1,2].map(function(){return H.map(function(){return 0})}),t:[0,1,2].map(function(){return H.map(function(){return 0})}),from:"",at:0}}
   var S=blank(),lastTp={},chartMode="race";
   try{var j=JSON.parse(localStorage.getItem(KEY)||"null");if(j&&j.s&&j.s.length===3)S=j}catch(e){}
-  function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+  var DEMO=/nut=demo/.test(location.search);
+  function save(){if(DEMO)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
   function par(h){return H[h][0]}
   function fmt(n){return n===0?"E":(n>0?"+"+n:"−"+(-n))}
   function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
@@ -1711,7 +1712,7 @@ window.hbSnow=function(el){
         return "<div><span>"+esc(f.name)+" −"+L[2]+" vs "+esc(d.name)+"</span><b>"+esc(lead)+' · <span class="'+(cov?"ok":"")+'">'+esc(cov?f.name:d.name)+" covering</span></b></div>"}).join("");
       var P=T[1],B=T[2];if(P.thru&&B.thru)h+="<div><span>Prop: Peyton &amp; Nathan beat Brett &amp; Kunal (+195)</span><b>"+(P.tp<B.tp?"Cashing":"Not yet")+"</b></div>"}
     bets.innerHTML=h?'<div class="bh">Side bets</div>'+h:"";bets.hidden=!h;
-    src.textContent=!any?"Scores are kept on the scorekeeper's phone. Tap Keep score to start.":S.from==="link"?"From a shared link · updated "+tm(S.at)+". Ask the scorekeeper to send a fresh one.":"Scored on this phone. Tap Send scores to update the group.";
+    src.textContent=!any?"Scores are kept on the scorekeeper's phone. Tap Keep score to start.":S.from==="live"?"Live · updated "+tm(S.jat||S.at)+". Refreshes on its own every 30 seconds.":S.from==="link"?"From a shared link · updated "+tm(S.at)+". Ask the scorekeeper to send a fresh one.":"Scored on this phone. Tap Send scores to update the group.";
     if(nn){var show=n>=SHOW0&&n<SHOW1;nn.hidden=!show;
       if(show&&!any){nnL.textContent="Nut Cup · Scorekeeper";nnT.innerHTML="Tap here, then <b>Keep score</b>. One phone scores all three teams."}
       if(show&&any){nnL.textContent=done?"Nut Cup · Final":"Nut Cup · Live";nnT.innerHTML=order.filter(function(t){return t.thru}).map(function(t,k){return (k?" &nbsp;·&nbsp; ":"")+"<b>"+fmt(t.tp)+"</b> "+esc(t.name)+(t.thru===18?"":" ("+t.thru+")")}).join("")+(W?'<small class="nnodds">Live odds: '+order.map(function(t){return esc(t.name.split(" ")[0])+" "+american(W[t.i])}).join(" · ")+"</small>":"")}}
@@ -1817,6 +1818,20 @@ window.hbSnow=function(el){
   [].forEach.call(document.querySelectorAll("[data-sendscores]"),function(b){b.addEventListener("click",function(e){e.preventDefault();share()})});
   if(/nut=demo/.test(location.search)){var D=[[4,4,3,3,4,5,4,2,4,4,3,3,5],[5,4,4,3,5,4,4,3,4,4,4],[5,5,5,4,4,6,4,3,5,4,5,3,5]];S=blank();D.forEach(function(r,i){r.forEach(function(v,h){S.s[i][h]=Math.min(v,par(h)+1)})});S.from="here"}
   absorb();window.addEventListener("hashchange",function(){absorb();render()});
+  /* scores Peyton texts to Claude land in scores.json on the site; every phone picks them up */
+  function pull(){
+    if(DEMO)return;
+    fetch("scores.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){
+      if(!j||!j.s||!j.at)return;var ts=Date.parse(j.at);if(!ts||ts<=(S.jat||0))return;
+      if(ts>=PRAC&&S.at&&S.at<PRAC)S=blank();
+      var prev=S.js||null,ch=false;
+      for(var i=0;i<3;i++)for(var h=0;h<18;h++){var v=Math.min(+(j.s[i]&&j.s[i][h])||0,par(h)+1),pv=prev?prev[i][h]:0,cv=S.s[i][h];
+        if(v&&v!==cv&&(!cv||ts>=S.t[i][h])){S.s[i][h]=v;S.t[i][h]=ts;ch=true}
+        else if(!v&&pv&&cv===pv){S.s[i][h]=0;S.t[i][h]=ts;ch=true}}
+      S.js=j.s;S.jat=ts;if(ch){S.from=S.from==="here"?"here":"live";S.at=Math.max(S.at||0,ts)}save();if(ch)render();
+    }).catch(function(){});
+  }
+  pull();setInterval(function(){var n=Date.now();if(n<new Date("2026-11-07T04:00:00-05:00").getTime())pull()},30000);
   render();
 })();
 /* ---------- Live Blairsville sky: real sun, moon, weather, firepit ---------- */
