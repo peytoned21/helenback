@@ -427,7 +427,12 @@ html.scoring,html.scoring body{overflow:hidden}
 #scorer .sc-board b.u{color:#ff6b6b}
 #scorer .sc-board small{display:block;font-family:var(--mono);font-size:.55rem;color:var(--frost);text-transform:uppercase}
 #scorer .sc-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;font-size:.66rem;color:var(--frost)}
-#scorer .sc-clear{background:none;border:0;color:#7d8f95;font-size:.66rem;text-decoration:underline}
+#scorer .sc-clear{background:none;border:1px solid rgba(255,107,107,.5);color:#ff8a7a;font-size:.68rem;padding:8px 12px;border-radius:6px;white-space:nowrap}
+#scorer .sc-chole{display:block;margin:8px auto 0;background:none;border:1px solid var(--line);color:var(--frost);font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:14px}
+#scorer .sc-undo{background:none;border:0;color:#b5371f;font-weight:700;font-size:.8rem;margin-left:6px;text-decoration:underline}
+#scorer .sc-toast{pointer-events:auto}
+.nutlive .nl-clr{background:none;border:0;color:#7d8f95;font-size:.68rem;text-decoration:underline;padding:4px 0;margin-left:auto}
+
 #scorer .sc-toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--bone);color:#111;padding:10px 14px;border-radius:20px;font-size:.8rem;box-shadow:0 8px 24px rgba(0,0,0,.4);white-space:nowrap}
 .nl-row .tm .wodds{display:block;font-style:normal;margin-top:3px;color:var(--frost)}
 .nl-row .tm .wodds b{color:var(--ember);font-weight:700}
@@ -990,7 +995,7 @@ body.arrived .arrive{display:block}
         <div class="nl-key"></div>
       </div>
       <div class="bets" id="nlBets" hidden></div>
-      <div class="nf"><span class="legend">● birdie &nbsp;■ bogey (max)</span><span class="nbtns"><button class="btn" type="button" data-sendscores>Send scores</button><button class="btn hot" type="button" data-score>Keep score</button></span></div>
+      <div class="nf"><span class="legend">● birdie &nbsp;■ bogey (max)</span><span class="nbtns"><button class="btn" type="button" data-sendscores>Send scores</button><button class="btn hot" type="button" data-score>Keep score</button></span><button class="nl-clr" type="button" data-clearscores hidden>Clear scores on this phone</button></div>
       <p class="nsrc" id="nlSrc"></p>
     </div>
     <div class="odds">
@@ -1651,7 +1656,7 @@ window.hbSnow=function(el){
   var nn=document.getElementById("nutNow"),nnT=document.getElementById("nutNowT"),nnL=document.getElementById("nutNowL");
   var qn=(location.search.match(/now=([^&]+)/)||[])[1];
   function now(){return qn?new Date(decodeURIComponent(qn)).getTime():Date.now()}
-  var TEE=new Date("2026-11-06T09:10:00-05:00").getTime(),SHOW0=new Date("2026-11-06T08:30:00-05:00").getTime(),SHOW1=new Date("2026-11-06T22:30:00-05:00").getTime();
+  var PRAC=new Date("2026-11-06T09:00:00-05:00").getTime(),TEE=new Date("2026-11-06T09:10:00-05:00").getTime(),SHOW0=new Date("2026-11-06T08:30:00-05:00").getTime(),SHOW1=new Date("2026-11-06T22:30:00-05:00").getTime();
   function blank(){return {s:[0,1,2].map(function(){return H.map(function(){return 0})}),t:[0,1,2].map(function(){return H.map(function(){return 0})}),from:"",at:0}}
   var S=blank(),lastTp={},chartMode="race";
   try{var j=JSON.parse(localStorage.getItem(KEY)||"null");if(j&&j.s&&j.s.length===3)S=j}catch(e){}
@@ -1662,10 +1667,12 @@ window.hbSnow=function(el){
   function tm(ms){var d=new Date(ms);return d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}
   /* ---- share link: 54 digits, 0 = blank ---- */
   function encode(){return S.s.map(function(r){return r.join("")}).join("")}
-  function link(){return location.origin+location.pathname+"#nut="+encode()+"."+Math.floor(Date.now()/1000).toString(36)}
+  function link(){return location.origin+location.pathname+"#nut="+encode()+"."+Math.floor(now()/1000).toString(36)}
   function absorb(){
     var m=location.hash.match(/nut=([0-9]{54})(?:\.([0-9a-z]+))?/); if(!m)return;
     var ts=m[2]?parseInt(m[2],36)*1000:Date.now(),code=m[1],changed=false;
+    /* anything entered before Friday 9:00 is practice: the first real link wipes it */
+    if(ts>=PRAC&&S.at&&S.at<PRAC)S=blank();
     for(var i=0;i<3;i++)for(var h=0;h<18;h++){var v=+code[i*18+h];
       if(v&&v!==S.s[i][h]&&(!S.s[i][h]||ts>=S.t[i][h])){S.s[i][h]=v;S.t[i][h]=ts;changed=true}}
     S.from="link";S.at=ts;save();
@@ -1677,7 +1684,7 @@ window.hbSnow=function(el){
     var T=TEAMS.map(function(name,i){var tot=0,tp=0,thru=0,b=0;
       for(var h=0;h<18;h++){var v=S.s[i][h];if(!v)continue;any=true;tot+=v;tp+=v-par(h);thru++;if(v<par(h))b++}
       return {name:name,i:i,tot:tot,tp:tp,thru:thru,birdies:b}});
-    var order=T.slice().sort(function(a,b){return (b.thru?0:1)-(a.thru?0:1)||a.tp-b.tp||b.thru-a.thru||a.i-b.i});
+    var order=T.slice().sort(function(a,b){return (a.thru?0:1)-(b.thru?0:1)||a.tp-b.tp||b.thru-a.thru||a.i-b.i});
     return {T:T,order:order,any:any,done:T.every(function(t){return t.thru===18})};
   }
   function holeCells(i){var out="";for(var h=0;h<18;h++){var v=S.s[i][h],p=par(h),k=!v?"":v<=p-2?"eg":v<p?"b":v===p?"p":"bo";out+='<i class="'+k+'">'+(v||h+1)+"</i>"}return out}
@@ -1686,7 +1693,7 @@ window.hbSnow=function(el){
     var W=any&&!done?oddsOf():null;
     /* movement: rank each team without its most recent hole, compare */
     var prevRank={};(function(){var P=T.map(function(t){var last=-1;for(var h=17;h>=0;h--)if(S.s[t.i][h]){last=h;break}var tp=t.tp-(last>=0?S.s[t.i][last]-par(last):0);return {i:t.i,tp:tp,th:t.thru-(last>=0?1:0)}});
-      P.sort(function(a,b){return (b.th?0:1)-(a.th?0:1)||a.tp-b.tp||a.i-b.i});P.forEach(function(x,k){prevRank[x.i]=x.th?k:9})})();
+      P.sort(function(a,b){return (a.th?0:1)-(b.th?0:1)||a.tp-b.tp||a.i-b.i});P.forEach(function(x,k){prevRank[x.i]=x.th?k:9})})();
     st.className="st"+(any&&!done?" on":"");st.textContent=done?"Final":any?"Live":(n<TEE?"Tees off Fri 9:10":"Waiting on the first score");
     var pos=0,prev=null;
     rowsEl.innerHTML=order.map(function(t,k){
@@ -1709,6 +1716,7 @@ window.hbSnow=function(el){
       if(show&&!any){nnL.textContent="Nut Cup · Scorekeeper";nnT.innerHTML="Tap here, then <b>Keep score</b>. One phone scores all three teams."}
       if(show&&any){nnL.textContent=done?"Nut Cup · Final":"Nut Cup · Live";nnT.innerHTML=order.filter(function(t){return t.thru}).map(function(t,k){return (k?" &nbsp;·&nbsp; ":"")+"<b>"+fmt(t.tp)+"</b> "+esc(t.name)+(t.thru===18?"":" ("+t.thru+")")}).join("")+(W?'<small class="nnodds">Live odds: '+order.map(function(t){return esc(t.name.split(" ")[0])+" "+american(W[t.i])}).join(" · ")+"</small>":"")}}
     drawChart(any);
+    [].forEach.call(document.querySelectorAll("[data-clearscores]"),function(b){b.hidden=!any});
     if(sc&&sc.classList.contains("open"))paintScorer();
   }
   var chartEl=document.getElementById("nlChart");
@@ -1746,16 +1754,19 @@ window.hbSnow=function(el){
   /* ---- scorer overlay ---- */
   var sc=document.createElement("div");sc.id="scorer";sc.setAttribute("role","dialog");sc.setAttribute("aria-label","Nut Cup scorer");
   sc.innerHTML='<div class="sc-top"><button class="sc-x" type="button" aria-label="Close">✕</button><span class="mono">Nut Cup · Butternut Creek</span><button class="sc-send" type="button">Send scores</button></div>'+
-    '<div class="sc-dots"></div><div class="sc-hole"><button class="sc-nav prev" type="button" aria-label="Previous hole">‹</button><div class="sc-hh"><div class="sc-n"></div><div class="sc-meta"></div><div class="sc-rib"></div></div><button class="sc-nav next" type="button" aria-label="Next hole">›</button></div>'+
-    '<div class="sc-prompt" hidden><span></span><button class="sc-psend" type="button">Text the group</button><button class="sc-pskip" type="button">Later</button></div><div class="sc-teams"></div><div class="sc-board"></div><div class="sc-foot"><span>Bogey max: you can\'t enter worse than a bogey.</span><button class="sc-clear" type="button">Clear all</button></div><div class="sc-toast" hidden></div>';
+    '<div class="sc-dots"></div><div class="sc-hole"><button class="sc-nav prev" type="button" aria-label="Previous hole">‹</button><div class="sc-hh"><div class="sc-n"></div><div class="sc-meta"></div><div class="sc-rib"></div><button class="sc-chole" type="button" hidden>Clear hole</button></div><button class="sc-nav next" type="button" aria-label="Next hole">›</button></div>'+
+    '<div class="sc-prompt" hidden><span></span><button class="sc-psend" type="button">Text the group</button><button class="sc-pskip" type="button">Later</button></div><div class="sc-teams"></div><div class="sc-board"></div><div class="sc-foot"><span>Bogey max: nothing worse than a bogey. Tap a picked score again to remove it.</span><button class="sc-clear" type="button">Clear scorecard</button></div><div class="sc-toast" hidden></div>';
   document.body.appendChild(sc);
   var cur=0,clearArm=0,advT=null;
   function firstOpen(){for(var h=0;h<18;h++){if(!S.s[0][h]||!S.s[1][h]||!S.s[2][h])return h}return 17}
-  function toast(m){var t=sc.querySelector(".sc-toast");t.textContent=m;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(function(){t.hidden=true},2200)}
+  var undoSnap=null;
+  function toast(m,undo){var t=sc.querySelector(".sc-toast");t.innerHTML=esc(m)+(undo?' <button type="button" class="sc-undo">Undo</button>':"");undoSnap=undo||null;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(function(){t.hidden=true;undoSnap=null},undo?5000:2200)}
+  function snap(){return JSON.parse(JSON.stringify(S))}
   function paintScorer(){
     var p=par(cur),hd=H[cur];
     sc.querySelector(".sc-n").innerHTML="Hole <b>"+(cur+1)+"</b>";
     sc.querySelector(".sc-meta").innerHTML="<span>Par "+p+"</span><span>"+hd[2]+" yds blue · "+hd[3]+" gold</span><span>Hcp "+hd[1]+(hd[1]<=3?" · tough one":hd[1]>=16?" · scoring chance":"")+"</span>";
+    var ch=sc.querySelector(".sc-chole");ch.hidden=!(S.s[0][cur]||S.s[1][cur]||S.s[2][cur]);ch.textContent="Clear hole "+(cur+1);
     var rib=sc.querySelector(".sc-rib"),pct2=Math.min(1,hd[3]/560);rib.innerHTML='<svg viewBox="0 0 300 40" preserveAspectRatio="none"><path d="M10 30 C 90 '+(p===5?6:p===4?14:24)+', 200 '+(p===5?38:p===4?30:26)+', '+(10+280*pct2).toFixed(0)+' 20" class="fw"/><circle cx="10" cy="30" r="4" class="tee"/><g transform="translate('+(10+280*pct2).toFixed(0)+' 20)"><circle r="9" class="gr"/><line x1="0" y1="0" x2="0" y2="-16" class="pole"/><path d="M0 -16 L9 -12.5 L0 -9 Z" class="flag"/></g></svg>';
     var d="";for(var h=0;h<18;h++){var full=S.s[0][h]&&S.s[1][h]&&S.s[2][h],some=S.s[0][h]||S.s[1][h]||S.s[2][h];d+='<button type="button" data-h="'+h+'" class="'+(h===cur?"on ":"")+(full?"full":some?"part":"")+'">'+(h+1)+"</button>"}
     sc.querySelector(".sc-dots").innerHTML=d;
@@ -1785,8 +1796,11 @@ window.hbSnow=function(el){
     if(b.classList.contains("prev")&&cur>0){cur--;return paintScorer()}
     if(b.classList.contains("next")&&cur<17){cur++;return paintScorer()}
     if(b.dataset.h){cur=+b.dataset.h;return paintScorer()}
-    if(b.classList.contains("sc-clear")){if(Date.now()-clearArm<3000){S=blank();save();render();toast("Scorecard cleared")}else{clearArm=Date.now();toast("Tap Clear all again to wipe every score")}return}
-    if(b.dataset.t){var i=+b.dataset.t,v=+b.dataset.v;S.s[i][cur]=S.s[i][cur]===v?0:v;S.t[i][cur]=Date.now();S.from="here";S.at=Date.now();save();
+    if(b.classList.contains("sc-undo")){if(undoSnap){S=undoSnap;save();render();sc.querySelector(".sc-toast").hidden=true;undoSnap=null}return}
+    if(b.classList.contains("sc-chole")){var sn=snap();for(var ti=0;ti<3;ti++){S.s[ti][cur]=0;S.t[ti][cur]=Date.now()}S.at=Date.now();save();render();toast("Hole "+(cur+1)+" cleared",sn);return}
+    if(b.classList.contains("sc-clear")){if(Date.now()-clearArm<4000){var sn2=snap();S=blank();S.at=Date.now();save();cur=0;render();clearArm=0;b.textContent="Clear scorecard";toast("Scorecard cleared",sn2)}else{clearArm=Date.now();b.textContent="Tap again to clear everything";setTimeout(function(){if(Date.now()-clearArm>=3900){b.textContent="Clear scorecard"}},4000)}return}
+    if(b.dataset.t){var i=+b.dataset.t,v=+b.dataset.v;
+      if(now()>=PRAC&&S.at&&S.at<PRAC){S=blank();save();toast("Cleared the practice scores from before tee time")}S.s[i][cur]=S.s[i][cur]===v?0:v;S.t[i][cur]=now();S.from="here";S.at=now();save();
       if(navigator.vibrate)try{navigator.vibrate(S.s[i][cur]&&S.s[i][cur]<par(cur)?[10,40,10]:8)}catch(x){}
       if(S.s[i][cur]&&S.s[i][cur]<par(cur))celebrate(i,v,S.s[i][cur]===1?"ACE!":S.s[i][cur]<=par(cur)-2?"EAGLE!":"BIRDIE!");
       render();
@@ -1799,6 +1813,7 @@ window.hbSnow=function(el){
   sc.addEventListener("touchend",function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(dx)>70){if(dx<0&&cur<17)cur++;else if(dx>0&&cur>0)cur--;paintScorer()}});
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&sc.classList.contains("open"))close()});
   [].forEach.call(document.querySelectorAll("[data-score]"),function(b){b.addEventListener("click",function(e){e.preventDefault();open()})});
+  [].forEach.call(document.querySelectorAll("[data-clearscores]"),function(b){var arm=0;b.addEventListener("click",function(){if(Date.now()-arm<4000){S=blank();S.at=Date.now();save();render();b.textContent="Cleared";setTimeout(function(){b.textContent="Clear scores on this phone"},2000);arm=0}else{arm=Date.now();b.textContent="Tap again to clear";setTimeout(function(){if(Date.now()-arm>=3900)b.textContent="Clear scores on this phone"},4000)}})});
   [].forEach.call(document.querySelectorAll("[data-sendscores]"),function(b){b.addEventListener("click",function(e){e.preventDefault();share()})});
   if(/nut=demo/.test(location.search)){var D=[[4,4,3,3,4,5,4,2,4,4,3,3,5],[5,4,4,3,5,4,4,3,4,4,4],[5,5,5,4,4,6,4,3,5,4,5,3,5]];S=blank();D.forEach(function(r,i){r.forEach(function(v,h){S.s[i][h]=Math.min(v,par(h)+1)})});S.from="here"}
   absorb();window.addEventListener("hashchange",function(){absorb();render()});
