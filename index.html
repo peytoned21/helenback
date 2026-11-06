@@ -1713,8 +1713,8 @@ window.hbSnow=function(el){
     var h="";
     if(any){h=LINES.map(function(L){var f=T[L[0]],d=T[L[1]];if(!f.thru||!d.thru)return "";
         var m=d.tp-f.tp,cov=m>L[2],lead=m===0?"All square":(m>0?f.name+" by "+m:d.name+" by "+(-m));
-        return "<div><span>"+esc(f.name)+" −"+L[2]+" vs "+esc(d.name)+"</span><b>"+esc(lead)+' · <span class="'+(cov?"ok":"")+'">'+esc(cov?f.name:d.name)+" covering</span></b></div>"}).join("");
-      var P=T[1],B=T[2];if(P.thru&&B.thru)h+="<div><span>Prop: Peyton &amp; Nathan beat Brett &amp; Kunal (+195)</span><b>"+(P.tp<B.tp?"Cashing":"Not yet")+"</b></div>"}
+        return "<div><span>"+esc(f.name)+" −"+L[2]+" vs "+esc(d.name)+"</span><b>"+esc(lead)+' · <span class="'+(cov?"ok":"")+'">'+esc(cov?f.name:d.name)+(done?" covered":" covering")+"</span></b></div>"}).join("");
+      var P=T[1],B=T[2];if(P.thru&&B.thru)h+="<div><span>Prop: Peyton &amp; Nathan beat Brett &amp; Kunal (+195)</span><b>"+(done?(P.tp<B.tp?"Cashed":"Lost"):(P.tp<B.tp?"Cashing":"Not yet"))+"</b></div>"}
     bets.innerHTML=h?'<div class="bh">Side bets</div>'+h:"";bets.hidden=!h;
     src.textContent=!any?"Scores are kept on the scorekeeper's phone. Tap Keep score to start.":S.from==="live"?"Live · updated "+tm(S.jat||S.at)+". Refreshes on its own every 30 seconds.":S.from==="link"?"From a shared link · updated "+tm(S.at)+". Ask the scorekeeper to send a fresh one.":"Scored on this phone. Tap Send scores to update the group.";
     if(nn){var show=n>=SHOW0&&n<SHOW1;nn.hidden=!show;
