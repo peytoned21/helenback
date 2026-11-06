@@ -433,6 +433,43 @@ html.scoring,html.scoring body{overflow:hidden}
 .nl-row .tm .wodds b{color:var(--ember);font-weight:700}
 .nutnow .nnodds{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:var(--frost);margin-top:4px}
 #scorer .sc-board em{display:block;font-style:normal;font-family:var(--mono);font-size:.62rem;color:var(--ember);margin-top:2px}
+.tdot{display:inline-block;flex:none;width:9px;height:9px;border-radius:50%;background:var(--tc);margin-right:8px;vertical-align:.12em;box-shadow:0 0 0 3px rgba(255,255,255,.08)}
+.nl-row{position:relative}
+.nl-row.lead{background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 14%,transparent),transparent 70%)}
+.nl-row.lead:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tc)}
+.nl-row .pos{position:relative}
+.nl-row .mv{position:absolute;left:-2px;top:-10px;font-style:normal;font-size:.55rem}
+.nl-row .mv.up{color:#7ad69a}.nl-row .mv.dn{color:#ff6b6b}
+.nl-row.bump .tp{animation:nlbump .9s ease-out}
+@keyframes nlbump{0%{transform:scale(1.35);text-shadow:0 0 18px currentColor}100%{transform:none;text-shadow:none}}
+.nl-chart{padding:12px 14px 10px;border-bottom:1px solid var(--line)}
+.nl-tabs{display:inline-flex;border:1px solid var(--line);border-radius:20px;padding:2px;margin-bottom:8px}
+.nl-tabs button{background:none;border:0;color:var(--frost);font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:16px}
+.nl-tabs button.on{background:var(--bone);color:#111}
+.nl-chart svg{width:100%;height:170px;display:block;overflow:visible}
+.nl-chart .g{stroke:rgba(238,229,214,.07);stroke-width:1}
+.nl-chart .g0{stroke:rgba(238,229,214,.28);stroke-width:1;stroke-dasharray:3 3}
+.nl-chart text{font-family:var(--mono);font-size:8px;fill:#6f858c}
+.nl-chart .yl{text-anchor:end}.nl-chart .xl{text-anchor:middle}.nl-chart .cap{text-anchor:end;fill:#566b72}
+.nl-chart .ln{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.nl-chart .dot{stroke:#0f1719;stroke-width:2}
+.nl-key{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;font-size:.68rem;color:var(--frost)}
+.nl-key i{display:inline-block;width:10px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+#scorer .sc-rib{max-width:280px;margin:10px auto 0;height:40px}
+#scorer .sc-rib svg{width:100%;height:40px;overflow:visible}
+#scorer .sc-rib .fw{fill:none;stroke:#2f4a3e;stroke-width:10;stroke-linecap:round}
+#scorer .sc-rib .tee{fill:var(--bone)}
+#scorer .sc-rib .gr{fill:#3c6b4f}
+#scorer .sc-rib .pole{stroke:var(--bone);stroke-width:1.2}
+#scorer .sc-rib .flag{fill:var(--ember)}
+#scorer .sc-tn{display:flex;align-items:center}
+#scorer .sc-opts button.sel:not(.under){box-shadow:0 0 0 2px var(--tc) inset}
+.sc-cele{position:fixed;inset:0;pointer-events:none;z-index:1200}
+.sc-cele b{position:fixed;transform:translate(-50%,-50%);font-family:var(--display);font-weight:900;font-size:2rem;color:#fff;text-shadow:0 2px 14px rgba(255,90,90,.8);animation:cstamp 1s ease-out forwards}
+.sc-cele i{position:fixed;width:7px;height:7px;border-radius:50%;animation:cpop .9s ease-out forwards}
+@keyframes cstamp{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}70%{opacity:1;transform:translate(-50%,-70%) scale(1)}100%{opacity:0;transform:translate(-50%,-95%) scale(1)}}
+@keyframes cpop{0%{transform:translate(-50%,-50%);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy)));opacity:0}}
+@media (prefers-reduced-motion: reduce){.sc-cele{display:none}.nl-row.bump .tp{animation:none}}
 .nutnow{margin-top:14px;border:1px solid rgba(255,123,51,.5);border-left:4px solid var(--ember);border-radius:3px;padding:10px 12px;background:#0d1518;display:block;color:inherit;text-decoration:none}
 .nutnow span{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ember)}
 .nutnow div{font-size:.9rem;margin-top:4px;line-height:1.5}
@@ -947,6 +984,11 @@ body.arrived .arrive{display:block}
       <div class="nh"><b>Nut Cup · Leaderboard</b><span class="st" id="nlSt">Tees off Fri 9:10</span></div>
       <div class="champ" id="nlChamp" hidden><span>Nut Cup champions</span><div id="nlChampT"></div></div>
       <div id="nlRows"></div>
+      <div class="nl-chart" id="nlChart" hidden>
+        <div class="nl-tabs"><button type="button" data-ch="race" class="on">The race</button><button type="button" data-ch="odds">Win odds</button></div>
+        <svg viewBox="0 0 340 170" preserveAspectRatio="none" aria-label="Chart"></svg>
+        <div class="nl-key"></div>
+      </div>
       <div class="bets" id="nlBets" hidden></div>
       <div class="nf"><span class="legend">● birdie &nbsp;■ bogey (max)</span><span class="nbtns"><button class="btn" type="button" data-sendscores>Send scores</button><button class="btn hot" type="button" data-score>Keep score</button></span></div>
       <p class="nsrc" id="nlSrc"></p>
@@ -1588,13 +1630,14 @@ window.hbSnow=function(el){
   /* par, handicap, blue yds, gold yds (Butternut Creek card) */
   var H=[[5,7,502,538],[4,3,335,381],[4,9,382,405],[3,15,144,158],[4,11,471,444],[5,5,452,500],[4,13,306,356],[3,17,129,138],[4,1,396,412],[4,6,388,425],[4,8,305,339],[3,16,185,204],[5,10,470,511],[4,14,268,289],[4,2,368,407],[4,12,296,309],[3,18,128,151],[5,4,498,525]];
   var LINES=[[0,2,2.5],[0,1,3.5],[2,1,1.5]];
+  var COL=["#ffb347","#6ec6ff","#b6e36a"];
   var KEY="hb14-nut";
   /* live odds: each team's per-hole scoring rate starts from the opening board (Mack & Nick −3, Brett & Kunal −1.5, Peyton & Nathan E over 18),
      blends in how they're actually playing, then simulates the holes left. Bogey max keeps every hole to birdie/par/bogey (eagles on par 5s). */
   var PRIOR=[-3,0,-1.5];
-  function oddsOf(){
-    var K=18,N=4000,seed=12345,rnd=function(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
-    var info=[0,1,2].map(function(i){var x=0,left=[];for(var h=0;h<18;h++){var v=S.s[i][h];if(v)x+=v-par(h);else left.push(h)}var m=(PRIOR[i]/18*K+x)/(K+18-left.length);
+  function oddsOf(lim,N){
+    lim=lim==null?18:lim;N=N||4000;var K=18,seed=12345,rnd=function(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+    var info=[0,1,2].map(function(i){var x=0,left=[];for(var h=0;h<18;h++){var v=h<lim?S.s[i][h]:0;if(v)x+=v-par(h);else left.push(h)}var m=(PRIOR[i]/18*K+x)/(K+18-left.length);
       var pb=Math.min(.6,Math.max(.02,.17-.55*m)),pbo=Math.min(.6,Math.max(.02,.17+.55*m));return {x:x,left:left,pb:pb,pbo:pbo}});
     var w=[0,0,0];
     for(var n=0;n<N;n++){var t=info.map(function(f){var s=f.x;for(var k=0;k<f.left.length;k++){var h=f.left[k],pe=par(h)===5?f.pb*.12:0,r=rnd();s+=r<pe?-2:r<pe+f.pb?-1:r<pe+f.pb+f.pbo?1:0}return s});
@@ -1610,7 +1653,7 @@ window.hbSnow=function(el){
   function now(){return qn?new Date(decodeURIComponent(qn)).getTime():Date.now()}
   var TEE=new Date("2026-11-06T09:10:00-05:00").getTime(),SHOW0=new Date("2026-11-06T08:30:00-05:00").getTime(),SHOW1=new Date("2026-11-06T22:30:00-05:00").getTime();
   function blank(){return {s:[0,1,2].map(function(){return H.map(function(){return 0})}),t:[0,1,2].map(function(){return H.map(function(){return 0})}),from:"",at:0}}
-  var S=blank();
+  var S=blank(),lastTp={},chartMode="race";
   try{var j=JSON.parse(localStorage.getItem(KEY)||"null");if(j&&j.s&&j.s.length===3)S=j}catch(e){}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
   function par(h){return H[h][0]}
@@ -1641,13 +1684,18 @@ window.hbSnow=function(el){
   function render(){
     var c=calc(),T=c.T,order=c.order,any=c.any,done=c.done,n=now();
     var W=any&&!done?oddsOf():null;
+    /* movement: rank each team without its most recent hole, compare */
+    var prevRank={};(function(){var P=T.map(function(t){var last=-1;for(var h=17;h>=0;h--)if(S.s[t.i][h]){last=h;break}var tp=t.tp-(last>=0?S.s[t.i][last]-par(last):0);return {i:t.i,tp:tp,th:t.thru-(last>=0?1:0)}});
+      P.sort(function(a,b){return (b.th?0:1)-(a.th?0:1)||a.tp-b.tp||a.i-b.i});P.forEach(function(x,k){prevRank[x.i]=x.th?k:9})})();
     st.className="st"+(any&&!done?" on":"");st.textContent=done?"Final":any?"Live":(n<TEE?"Tees off Fri 9:10":"Waiting on the first score");
     var pos=0,prev=null;
     rowsEl.innerHTML=order.map(function(t,k){
       if(prev===null||t.tp!==prev){pos=k+1;prev=t.tp}
       var tied=t.thru&&order.filter(function(o){return o.thru&&o.tp===t.tp}).length>1;
       var cls=t.tp<0?"u":t.tp===0?"e":"o";
-      return '<div class="nl-row'+(k===0&&any?" lead":"")+'"><span class="pos">'+(t.thru?(tied?"T":"")+pos:"–")+'</span><span class="tm">'+esc(t.name)+"<small>"+(t.thru?t.tot+" strokes"+(t.birdies?" · "+t.birdies+" birdie"+(t.birdies>1?"s":""):""):"No scores yet")+(W?'<em class="wodds"><b>'+american(W[t.i])+"</b> "+pct(W[t.i])+" to win</em>":"")+'</small></span><span class="thru">'+(t.thru===18?"F":t.thru?"Thru "+t.thru:"")+'</span><span class="tp '+cls+'">'+(t.thru?fmt(t.tp):"")+'</span><div class="nl-holes">'+holeCells(t.i)+"</div></div>";
+      var mv=t.thru&&prevRank[t.i]!==9&&prevRank[t.i]!==k?(prevRank[t.i]>k?'<i class="mv up">▲</i>':'<i class="mv dn">▼</i>'):"";
+      var bump=lastTp[t.i]!==undefined&&lastTp[t.i]!==t.tp+"/"+t.thru?" bump":"";lastTp[t.i]=t.tp+"/"+t.thru;
+      return '<div class="nl-row'+(k===0&&any?" lead":"")+bump+'" style="--tc:'+COL[t.i]+'"><span class="pos">'+(t.thru?(tied?"T":"")+pos:"–")+mv+'</span><span class="tm"><span class="tdot"></span>'+esc(t.name)+"<small>"+(t.thru?t.tot+" strokes"+(t.birdies?" · "+t.birdies+" birdie"+(t.birdies>1?"s":""):""):"No scores yet")+(W?'<em class="wodds"><b>'+american(W[t.i])+"</b> "+pct(W[t.i])+" to win</em>":"")+'</small></span><span class="thru">'+(t.thru===18?"F":t.thru?"Thru "+t.thru:"")+'</span><span class="tp '+cls+'">'+(t.thru?fmt(t.tp):"")+'</span><div class="nl-holes">'+holeCells(t.i)+"</div></div>";
     }).join("");
     if(done){champ.hidden=false;var w=order.filter(function(o){return o.tp===order[0].tp});champT.textContent=w.map(function(o){return o.name}).join(" / ")+(w.length>1?" (tie)":"")+" · "+fmt(order[0].tp)}else champ.hidden=true;
     var h="";
@@ -1660,8 +1708,34 @@ window.hbSnow=function(el){
     if(nn){var show=n>=SHOW0&&n<SHOW1;nn.hidden=!show;
       if(show&&!any){nnL.textContent="Nut Cup · Scorekeeper";nnT.innerHTML="Tap here, then <b>Keep score</b>. One phone scores all three teams."}
       if(show&&any){nnL.textContent=done?"Nut Cup · Final":"Nut Cup · Live";nnT.innerHTML=order.filter(function(t){return t.thru}).map(function(t,k){return (k?" &nbsp;·&nbsp; ":"")+"<b>"+fmt(t.tp)+"</b> "+esc(t.name)+(t.thru===18?"":" ("+t.thru+")")}).join("")+(W?'<small class="nnodds">Live odds: '+order.map(function(t){return esc(t.name.split(" ")[0])+" "+american(W[t.i])}).join(" · ")+"</small>":"")}}
+    drawChart(any);
     if(sc&&sc.classList.contains("open"))paintScorer();
   }
+  var chartEl=document.getElementById("nlChart");
+  function drawChart(any){
+    if(!chartEl)return;chartEl.hidden=!any;if(!any)return;
+    var svg=chartEl.querySelector("svg"),W0=340,H0=170,L=26,R=12,Tp=12,B=22,maxH=0;
+    for(var i=0;i<3;i++)for(var h=0;h<18;h++)if(S.s[i][h])maxH=Math.max(maxH,h+1);
+    var X=function(h){return L+(W0-L-R)*h/18},series=[],lo,hi,Y,grid="";
+    if(chartMode==="race"){
+      series=[0,1,2].map(function(i){var pts=[[0,0]],tp=0;for(var h=0;h<18;h++){if(!S.s[i][h])break;tp+=S.s[i][h]-par(h);pts.push([h+1,tp])}return pts});
+      lo=-2;hi=2;series.forEach(function(p){p.forEach(function(q){lo=Math.min(lo,q[1]);hi=Math.max(hi,q[1])})});lo-=1;hi+=1;
+      Y=function(v){return Tp+(H0-Tp-B)*(v-lo)/(hi-lo)}; /* under par plots high: invert */
+      for(var v=Math.ceil(lo);v<=Math.floor(hi);v++){if(v%1)continue;var yy=Y(v);grid+='<line x1="'+L+'" x2="'+(W0-R)+'" y1="'+yy+'" y2="'+yy+'" class="'+(v===0?"g0":"g")+'"/>';if(v%2===0||hi-lo<8)grid+='<text x="'+(L-5)+'" y="'+(yy+3)+'" class="yl">'+fmt(v)+"</text>"}
+    }else{
+      var hist=[];for(var k=0;k<=maxH;k++)hist.push(oddsOf(k,900));
+      series=[0,1,2].map(function(i){return hist.map(function(w,k){return [k,w[i]*100]})});
+      lo=0;hi=100;Y=function(v){return H0-B-(H0-Tp-B)*v/100};
+      [0,25,50,75,100].forEach(function(v){var yy=Y(v);grid+='<line x1="'+L+'" x2="'+(W0-R)+'" y1="'+yy+'" y2="'+yy+'" class="'+(v===50?"g0":"g")+'"/><text x="'+(L-5)+'" y="'+(yy+3)+'" class="yl">'+v+"%</text>"});
+    }
+    for(var h=0;h<=18;h+=3)grid+='<text x="'+X(h)+'" y="'+(H0-6)+'" class="xl">'+(h===0?"Tee":h)+"</text>";
+    if(chartMode==="race")grid+='<text x="'+(W0-R)+'" y="'+(Tp-3)+'" class="cap">under par ↑</text>';
+    var lines=series.map(function(pts,i){if(pts.length<2&&chartMode==="race")return "";var d=pts.map(function(q,k){return (k?"L":"M")+X(q[0]).toFixed(1)+" "+Y(q[1]).toFixed(1)}).join(" "),e=pts[pts.length-1];
+      return '<path d="'+d+'" stroke="'+COL[i]+'" class="ln"/><circle cx="'+X(e[0])+'" cy="'+Y(e[1])+'" r="4" fill="'+COL[i]+'" class="dot"/>'}).join("");
+    svg.innerHTML=grid+lines;
+    chartEl.querySelector(".nl-key").innerHTML=TEAMS.map(function(n,i){return '<span><i style="background:'+COL[i]+'"></i>'+esc(n)+"</span>"}).join("");
+  }
+  if(chartEl)chartEl.addEventListener("click",function(e){var b=e.target.closest("[data-ch]");if(!b)return;chartMode=b.dataset.ch;[].forEach.call(chartEl.querySelectorAll("[data-ch]"),function(x){x.classList.toggle("on",x===b)});drawChart(true)});
   function share(){
     var c=calc(),txt="Nut Cup "+(c.done?"final":"update")+": "+c.order.filter(function(t){return t.thru}).map(function(t){return t.name+" "+fmt(t.tp)+(t.thru===18?"":" thru "+t.thru)}).join(", ");
     if(c.any&&!c.done){var W3=oddsOf();txt+=". Live odds: "+c.order.map(function(t){return t.name+" "+american(W3[t.i])}).join(", ")}
@@ -1672,7 +1746,7 @@ window.hbSnow=function(el){
   /* ---- scorer overlay ---- */
   var sc=document.createElement("div");sc.id="scorer";sc.setAttribute("role","dialog");sc.setAttribute("aria-label","Nut Cup scorer");
   sc.innerHTML='<div class="sc-top"><button class="sc-x" type="button" aria-label="Close">✕</button><span class="mono">Nut Cup · Butternut Creek</span><button class="sc-send" type="button">Send scores</button></div>'+
-    '<div class="sc-dots"></div><div class="sc-hole"><button class="sc-nav prev" type="button" aria-label="Previous hole">‹</button><div class="sc-hh"><div class="sc-n"></div><div class="sc-meta"></div></div><button class="sc-nav next" type="button" aria-label="Next hole">›</button></div>'+
+    '<div class="sc-dots"></div><div class="sc-hole"><button class="sc-nav prev" type="button" aria-label="Previous hole">‹</button><div class="sc-hh"><div class="sc-n"></div><div class="sc-meta"></div><div class="sc-rib"></div></div><button class="sc-nav next" type="button" aria-label="Next hole">›</button></div>'+
     '<div class="sc-prompt" hidden><span></span><button class="sc-psend" type="button">Text the group</button><button class="sc-pskip" type="button">Later</button></div><div class="sc-teams"></div><div class="sc-board"></div><div class="sc-foot"><span>Bogey max: you can\'t enter worse than a bogey.</span><button class="sc-clear" type="button">Clear all</button></div><div class="sc-toast" hidden></div>';
   document.body.appendChild(sc);
   var cur=0,clearArm=0,advT=null;
@@ -1681,16 +1755,24 @@ window.hbSnow=function(el){
   function paintScorer(){
     var p=par(cur),hd=H[cur];
     sc.querySelector(".sc-n").innerHTML="Hole <b>"+(cur+1)+"</b>";
-    sc.querySelector(".sc-meta").innerHTML="<span>Par "+p+"</span><span>"+hd[2]+" yds blue · "+hd[3]+" gold</span><span>Hcp "+hd[1]+"</span>";
+    sc.querySelector(".sc-meta").innerHTML="<span>Par "+p+"</span><span>"+hd[2]+" yds blue · "+hd[3]+" gold</span><span>Hcp "+hd[1]+(hd[1]<=3?" · tough one":hd[1]>=16?" · scoring chance":"")+"</span>";
+    var rib=sc.querySelector(".sc-rib"),pct2=Math.min(1,hd[3]/560);rib.innerHTML='<svg viewBox="0 0 300 40" preserveAspectRatio="none"><path d="M10 30 C 90 '+(p===5?6:p===4?14:24)+', 200 '+(p===5?38:p===4?30:26)+', '+(10+280*pct2).toFixed(0)+' 20" class="fw"/><circle cx="10" cy="30" r="4" class="tee"/><g transform="translate('+(10+280*pct2).toFixed(0)+' 20)"><circle r="9" class="gr"/><line x1="0" y1="0" x2="0" y2="-16" class="pole"/><path d="M0 -16 L9 -12.5 L0 -9 Z" class="flag"/></g></svg>';
     var d="";for(var h=0;h<18;h++){var full=S.s[0][h]&&S.s[1][h]&&S.s[2][h],some=S.s[0][h]||S.s[1][h]||S.s[2][h];d+='<button type="button" data-h="'+h+'" class="'+(h===cur?"on ":"")+(full?"full":some?"part":"")+'">'+(h+1)+"</button>"}
     sc.querySelector(".sc-dots").innerHTML=d;
     var opts=[];for(var v=Math.max(1,p-2);v<=p+1;v++)opts.push(v);
     var lab=function(v){var r=v-p;return v===1?"Ace":r<=-2?"Eagle":r===-1?"Birdie":r===0?"Par":"Bogey"};
     sc.querySelector(".sc-teams").innerHTML=TEAMS.map(function(name,i){var val=S.s[i][cur];
-      return '<div class="sc-team"><div class="sc-tn">'+esc(name)+'</div><div class="sc-opts">'+opts.map(function(v){var r=v-p;return '<button type="button" data-t="'+i+'" data-v="'+v+'" class="'+(val===v?"sel ":"")+(r<0?"under":r===0?"even":"over")+'"><b>'+v+"</b><small>"+lab(v)+"</small></button>"}).join("")+"</div></div>"}).join("");
+      return '<div class="sc-team" style="--tc:'+COL[i]+'"><div class="sc-tn"><span class="tdot"></span>'+esc(name)+'</div><div class="sc-opts">'+opts.map(function(v){var r=v-p;return '<button type="button" data-t="'+i+'" data-v="'+v+'" class="'+(val===v?"sel ":"")+(r<0?"under":r===0?"even":"over")+'"><b>'+v+"</b><small>"+lab(v)+"</small></button>"}).join("")+"</div></div>"}).join("");
     var c=calc(),W2=c.any&&!c.done?oddsOf():null;
     sc.querySelector(".sc-board").innerHTML=c.order.map(function(t){return '<div><span>'+esc(t.name)+'</span><b class="'+(t.tp<0?"u":"")+'">'+(t.thru?fmt(t.tp):"–")+"</b><small>"+(t.thru===18?"F":t.thru?"thru "+t.thru:"")+"</small>"+(W2?'<em>'+american(W2[t.i])+"</em>":"")+"</div>"}).join("");
     sc.querySelector(".prev").disabled=cur===0;sc.querySelector(".next").disabled=cur===17;
+  }
+  function celebrate(ti,tv,word){requestAnimationFrame(function(){requestAnimationFrame(function(){var btn=sc.querySelector('[data-t="'+ti+'"][data-v="'+tv+'"]');if(btn)celebrate2(btn,word)})})}
+  function celebrate2(btn,word){
+    var r=btn.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,box=document.createElement("div");box.className="sc-cele";
+    var html='<b style="left:'+cx+'px;top:'+(cy-34)+'px">'+word+"</b>";
+    for(var k=0;k<14;k++){var a=k/14*Math.PI*2,d=40+Math.random()*30;html+='<i style="left:'+cx+'px;top:'+cy+'px;--dx:'+(Math.cos(a)*d).toFixed(0)+'px;--dy:'+(Math.sin(a)*d).toFixed(0)+'px;background:'+(k%2?"#ff7b33":"#ff5a5a")+'"></i>'}
+    box.innerHTML=html;sc.appendChild(box);setTimeout(function(){box.remove()},1100);
   }
   function open(){cur=firstOpen();sc.classList.add("open");document.documentElement.classList.add("scoring");paintScorer()}
   function close(){sc.classList.remove("open");document.documentElement.classList.remove("scoring")}
@@ -1705,7 +1787,8 @@ window.hbSnow=function(el){
     if(b.dataset.h){cur=+b.dataset.h;return paintScorer()}
     if(b.classList.contains("sc-clear")){if(Date.now()-clearArm<3000){S=blank();save();render();toast("Scorecard cleared")}else{clearArm=Date.now();toast("Tap Clear all again to wipe every score")}return}
     if(b.dataset.t){var i=+b.dataset.t,v=+b.dataset.v;S.s[i][cur]=S.s[i][cur]===v?0:v;S.t[i][cur]=Date.now();S.from="here";S.at=Date.now();save();
-      if(navigator.vibrate)try{navigator.vibrate(8)}catch(x){}
+      if(navigator.vibrate)try{navigator.vibrate(S.s[i][cur]&&S.s[i][cur]<par(cur)?[10,40,10]:8)}catch(x){}
+      if(S.s[i][cur]&&S.s[i][cur]<par(cur))celebrate(i,v,S.s[i][cur]===1?"ACE!":S.s[i][cur]<=par(cur)-2?"EAGLE!":"BIRDIE!");
       render();
       var full=S.s[0][cur]&&S.s[1][cur]&&S.s[2][cur];
       if(full&&(cur+1)%3===0){var c2=calc(),pr=sc.querySelector(".sc-prompt");pr.querySelector("span").innerHTML=(cur===17?"<b>That's 18.</b> Send the final":cur===8?"<b>At the turn.</b> Send the update":"<b>Thru "+(cur+1)+".</b> Send the update")+" · "+c2.order.filter(function(t){return t.thru}).map(function(t){return esc(t.name.split(" ")[0])+" "+fmt(t.tp)}).join(", ");pr.hidden=false}
