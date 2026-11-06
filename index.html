@@ -429,6 +429,10 @@ html.scoring,html.scoring body{overflow:hidden}
 #scorer .sc-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;font-size:.66rem;color:var(--frost)}
 #scorer .sc-clear{background:none;border:0;color:#7d8f95;font-size:.66rem;text-decoration:underline}
 #scorer .sc-toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--bone);color:#111;padding:10px 14px;border-radius:20px;font-size:.8rem;box-shadow:0 8px 24px rgba(0,0,0,.4);white-space:nowrap}
+.nl-row .tm .wodds{display:block;font-style:normal;margin-top:3px;color:var(--frost)}
+.nl-row .tm .wodds b{color:var(--ember);font-weight:700}
+.nutnow .nnodds{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:var(--frost);margin-top:4px}
+#scorer .sc-board em{display:block;font-style:normal;font-family:var(--mono);font-size:.62rem;color:var(--ember);margin-top:2px}
 .nutnow{margin-top:14px;border:1px solid rgba(255,123,51,.5);border-left:4px solid var(--ember);border-radius:3px;padding:10px 12px;background:#0d1518;display:block;color:inherit;text-decoration:none}
 .nutnow span{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ember)}
 .nutnow div{font-size:.9rem;margin-top:4px;line-height:1.5}
@@ -959,7 +963,7 @@ body.arrived .arrive{display:block}
       <div class="sec mono">Prop</div>
       <div class="row"><div><b>Peyton &amp; Nathan beat Brett &amp; Kunal</b></div><span class="line">+195</span></div>
     </div>
-    <p class="note">Built from a simulated two-man scramble using everyone's rough handicaps. Bars show implied win chance. Bragging rights only; settle up Friday night.</p>
+    <p class="note">Opening lines, built from a simulated two-man scramble using everyone's rough handicaps. Once scores come in, the leaderboard above shows live odds that re-run the rest of the round after every hole. Bars show implied win chance. Bragging rights only; settle up Friday night.</p>
 </section>
 
 <section id="rules">
@@ -1585,6 +1589,20 @@ window.hbSnow=function(el){
   var H=[[5,7,502,538],[4,3,335,381],[4,9,382,405],[3,15,144,158],[4,11,471,444],[5,5,452,500],[4,13,306,356],[3,17,129,138],[4,1,396,412],[4,6,388,425],[4,8,305,339],[3,16,185,204],[5,10,470,511],[4,14,268,289],[4,2,368,407],[4,12,296,309],[3,18,128,151],[5,4,498,525]];
   var LINES=[[0,2,2.5],[0,1,3.5],[2,1,1.5]];
   var KEY="hb14-nut";
+  /* live odds: each team's per-hole scoring rate starts from the opening board (Mack & Nick −3, Brett & Kunal −1.5, Peyton & Nathan E over 18),
+     blends in how they're actually playing, then simulates the holes left. Bogey max keeps every hole to birdie/par/bogey (eagles on par 5s). */
+  var PRIOR=[-3,0,-1.5];
+  function oddsOf(){
+    var K=18,N=4000,seed=12345,rnd=function(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+    var info=[0,1,2].map(function(i){var x=0,left=[];for(var h=0;h<18;h++){var v=S.s[i][h];if(v)x+=v-par(h);else left.push(h)}var m=(PRIOR[i]/18*K+x)/(K+18-left.length);
+      var pb=Math.min(.6,Math.max(.02,.17-.55*m)),pbo=Math.min(.6,Math.max(.02,.17+.55*m));return {x:x,left:left,pb:pb,pbo:pbo}});
+    var w=[0,0,0];
+    for(var n=0;n<N;n++){var t=info.map(function(f){var s=f.x;for(var k=0;k<f.left.length;k++){var h=f.left[k],pe=par(h)===5?f.pb*.12:0,r=rnd();s+=r<pe?-2:r<pe+f.pb?-1:r<pe+f.pb+f.pbo?1:0}return s});
+      var best=Math.min(t[0],t[1],t[2]),ws=[0,1,2].filter(function(i){return t[i]===best});ws.forEach(function(i){w[i]+=1/ws.length})}
+    return w.map(function(c){return c/N});
+  }
+  function american(p){if(p>=.999)return "LOCK";if(p<=.001)return "DEAD";var o=p>=.5?-(p/(1-p))*100:((1-p)/p)*100;o=Math.max(-10000,Math.min(10000,o));o=Math.abs(o)>=1000?Math.round(o/100)*100:Math.round(o/5)*5;if(o>=0&&o<100)o=100;if(o<0&&o>-100)o=-100;return (o>0?"+":"−")+Math.abs(o)}
+  function pct(p){return p>=.995?">99%":p<=.005?"<1%":Math.round(p*100)+"%"}
   var rowsEl=document.getElementById("nlRows"); if(!rowsEl)return;
   var st=document.getElementById("nlSt"),champ=document.getElementById("nlChamp"),champT=document.getElementById("nlChampT"),bets=document.getElementById("nlBets"),src=document.getElementById("nlSrc");
   var nn=document.getElementById("nutNow"),nnT=document.getElementById("nutNowT"),nnL=document.getElementById("nutNowL");
@@ -1622,13 +1640,14 @@ window.hbSnow=function(el){
   function holeCells(i){var out="";for(var h=0;h<18;h++){var v=S.s[i][h],p=par(h),k=!v?"":v<=p-2?"eg":v<p?"b":v===p?"p":"bo";out+='<i class="'+k+'">'+(v||h+1)+"</i>"}return out}
   function render(){
     var c=calc(),T=c.T,order=c.order,any=c.any,done=c.done,n=now();
+    var W=any&&!done?oddsOf():null;
     st.className="st"+(any&&!done?" on":"");st.textContent=done?"Final":any?"Live":(n<TEE?"Tees off Fri 9:10":"Waiting on the first score");
     var pos=0,prev=null;
     rowsEl.innerHTML=order.map(function(t,k){
       if(prev===null||t.tp!==prev){pos=k+1;prev=t.tp}
       var tied=t.thru&&order.filter(function(o){return o.thru&&o.tp===t.tp}).length>1;
       var cls=t.tp<0?"u":t.tp===0?"e":"o";
-      return '<div class="nl-row'+(k===0&&any?" lead":"")+'"><span class="pos">'+(t.thru?(tied?"T":"")+pos:"–")+'</span><span class="tm">'+esc(t.name)+"<small>"+(t.thru?t.tot+" strokes"+(t.birdies?" · "+t.birdies+" birdie"+(t.birdies>1?"s":""):""):"No scores yet")+'</small></span><span class="thru">'+(t.thru===18?"F":t.thru?"Thru "+t.thru:"")+'</span><span class="tp '+cls+'">'+(t.thru?fmt(t.tp):"")+'</span><div class="nl-holes">'+holeCells(t.i)+"</div></div>";
+      return '<div class="nl-row'+(k===0&&any?" lead":"")+'"><span class="pos">'+(t.thru?(tied?"T":"")+pos:"–")+'</span><span class="tm">'+esc(t.name)+"<small>"+(t.thru?t.tot+" strokes"+(t.birdies?" · "+t.birdies+" birdie"+(t.birdies>1?"s":""):""):"No scores yet")+(W?'<em class="wodds"><b>'+american(W[t.i])+"</b> "+pct(W[t.i])+" to win</em>":"")+'</small></span><span class="thru">'+(t.thru===18?"F":t.thru?"Thru "+t.thru:"")+'</span><span class="tp '+cls+'">'+(t.thru?fmt(t.tp):"")+'</span><div class="nl-holes">'+holeCells(t.i)+"</div></div>";
     }).join("");
     if(done){champ.hidden=false;var w=order.filter(function(o){return o.tp===order[0].tp});champT.textContent=w.map(function(o){return o.name}).join(" / ")+(w.length>1?" (tie)":"")+" · "+fmt(order[0].tp)}else champ.hidden=true;
     var h="";
@@ -1640,11 +1659,12 @@ window.hbSnow=function(el){
     src.textContent=!any?"Scores are kept on the scorekeeper's phone. Tap Keep score to start.":S.from==="link"?"From a shared link · updated "+tm(S.at)+". Ask the scorekeeper to send a fresh one.":"Scored on this phone. Tap Send scores to update the group.";
     if(nn){var show=n>=SHOW0&&n<SHOW1;nn.hidden=!show;
       if(show&&!any){nnL.textContent="Nut Cup · Scorekeeper";nnT.innerHTML="Tap here, then <b>Keep score</b>. One phone scores all three teams."}
-      if(show&&any){nnL.textContent=done?"Nut Cup · Final":"Nut Cup · Live";nnT.innerHTML=order.filter(function(t){return t.thru}).map(function(t,k){return (k?" &nbsp;·&nbsp; ":"")+"<b>"+fmt(t.tp)+"</b> "+esc(t.name)+(t.thru===18?"":" ("+t.thru+")")}).join("")}}
+      if(show&&any){nnL.textContent=done?"Nut Cup · Final":"Nut Cup · Live";nnT.innerHTML=order.filter(function(t){return t.thru}).map(function(t,k){return (k?" &nbsp;·&nbsp; ":"")+"<b>"+fmt(t.tp)+"</b> "+esc(t.name)+(t.thru===18?"":" ("+t.thru+")")}).join("")+(W?'<small class="nnodds">Live odds: '+order.map(function(t){return esc(t.name.split(" ")[0])+" "+american(W[t.i])}).join(" · ")+"</small>":"")}}
     if(sc&&sc.classList.contains("open"))paintScorer();
   }
   function share(){
     var c=calc(),txt="Nut Cup "+(c.done?"final":"update")+": "+c.order.filter(function(t){return t.thru}).map(function(t){return t.name+" "+fmt(t.tp)+(t.thru===18?"":" thru "+t.thru)}).join(", ");
+    if(c.any&&!c.done){var W3=oddsOf();txt+=". Live odds: "+c.order.map(function(t){return t.name+" "+american(W3[t.i])}).join(", ")}
     var u=link();
     if(navigator.share){navigator.share({title:"Nut Cup",text:txt,url:u}).catch(function(){})}
     else if(navigator.clipboard){navigator.clipboard.writeText(txt+"\n"+u).then(function(){toast("Link copied. Paste it in the group text.")})}
@@ -1668,8 +1688,8 @@ window.hbSnow=function(el){
     var lab=function(v){var r=v-p;return v===1?"Ace":r<=-2?"Eagle":r===-1?"Birdie":r===0?"Par":"Bogey"};
     sc.querySelector(".sc-teams").innerHTML=TEAMS.map(function(name,i){var val=S.s[i][cur];
       return '<div class="sc-team"><div class="sc-tn">'+esc(name)+'</div><div class="sc-opts">'+opts.map(function(v){var r=v-p;return '<button type="button" data-t="'+i+'" data-v="'+v+'" class="'+(val===v?"sel ":"")+(r<0?"under":r===0?"even":"over")+'"><b>'+v+"</b><small>"+lab(v)+"</small></button>"}).join("")+"</div></div>"}).join("");
-    var c=calc();
-    sc.querySelector(".sc-board").innerHTML=c.order.map(function(t){return '<div><span>'+esc(t.name)+'</span><b class="'+(t.tp<0?"u":"")+'">'+(t.thru?fmt(t.tp):"–")+"</b><small>"+(t.thru===18?"F":t.thru?"thru "+t.thru:"")+"</small></div>"}).join("");
+    var c=calc(),W2=c.any&&!c.done?oddsOf():null;
+    sc.querySelector(".sc-board").innerHTML=c.order.map(function(t){return '<div><span>'+esc(t.name)+'</span><b class="'+(t.tp<0?"u":"")+'">'+(t.thru?fmt(t.tp):"–")+"</b><small>"+(t.thru===18?"F":t.thru?"thru "+t.thru:"")+"</small>"+(W2?'<em>'+american(W2[t.i])+"</em>":"")+"</div>"}).join("");
     sc.querySelector(".prev").disabled=cur===0;sc.querySelector(".next").disabled=cur===17;
   }
   function open(){cur=firstOpen();sc.classList.add("open");document.documentElement.classList.add("scoring");paintScorer()}
