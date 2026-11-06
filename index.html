@@ -404,6 +404,11 @@ html.scoring,html.scoring body{overflow:hidden}
 #scorer .sc-n b{color:var(--ember);font-size:1.25em}
 #scorer .sc-meta{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:6px;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--frost)}
 #scorer .sc-meta span:first-child{color:var(--bone)}
+#scorer .sc-prompt{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:4px 0 10px;padding:10px 12px;border-radius:10px;background:rgba(255,123,51,.14);border:1px solid rgba(255,123,51,.55);font-size:.8rem}
+#scorer .sc-prompt span{flex:1 1 100%}
+#scorer .sc-prompt b{color:var(--ember)}
+#scorer .sc-psend{flex:1;height:44px;border-radius:8px;border:0;background:var(--ember);color:#111;font-weight:700;font-size:.9rem}
+#scorer .sc-pskip{height:44px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:none;color:var(--frost)}
 #scorer .sc-team{padding:12px 0;border-top:1px solid var(--line)}
 #scorer .sc-tn{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:1.05rem;margin-bottom:8px}
 #scorer .sc-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(60px,1fr));gap:8px}
@@ -1648,7 +1653,7 @@ window.hbSnow=function(el){
   var sc=document.createElement("div");sc.id="scorer";sc.setAttribute("role","dialog");sc.setAttribute("aria-label","Nut Cup scorer");
   sc.innerHTML='<div class="sc-top"><button class="sc-x" type="button" aria-label="Close">✕</button><span class="mono">Nut Cup · Butternut Creek</span><button class="sc-send" type="button">Send scores</button></div>'+
     '<div class="sc-dots"></div><div class="sc-hole"><button class="sc-nav prev" type="button" aria-label="Previous hole">‹</button><div class="sc-hh"><div class="sc-n"></div><div class="sc-meta"></div></div><button class="sc-nav next" type="button" aria-label="Next hole">›</button></div>'+
-    '<div class="sc-teams"></div><div class="sc-board"></div><div class="sc-foot"><span>Bogey max: you can\'t enter worse than a bogey.</span><button class="sc-clear" type="button">Clear all</button></div><div class="sc-toast" hidden></div>';
+    '<div class="sc-prompt" hidden><span></span><button class="sc-psend" type="button">Text the group</button><button class="sc-pskip" type="button">Later</button></div><div class="sc-teams"></div><div class="sc-board"></div><div class="sc-foot"><span>Bogey max: you can\'t enter worse than a bogey.</span><button class="sc-clear" type="button">Clear all</button></div><div class="sc-toast" hidden></div>';
   document.body.appendChild(sc);
   var cur=0,clearArm=0,advT=null;
   function firstOpen(){for(var h=0;h<18;h++){if(!S.s[0][h]||!S.s[1][h]||!S.s[2][h])return h}return 17}
@@ -1673,6 +1678,8 @@ window.hbSnow=function(el){
     var b=e.target.closest("button");if(!b)return;
     if(b.classList.contains("sc-x"))return close();
     if(b.classList.contains("sc-send"))return share();
+    if(b.classList.contains("sc-psend")){sc.querySelector(".sc-prompt").hidden=true;return share()}
+    if(b.classList.contains("sc-pskip")){sc.querySelector(".sc-prompt").hidden=true;return}
     if(b.classList.contains("prev")&&cur>0){cur--;return paintScorer()}
     if(b.classList.contains("next")&&cur<17){cur++;return paintScorer()}
     if(b.dataset.h){cur=+b.dataset.h;return paintScorer()}
@@ -1680,7 +1687,9 @@ window.hbSnow=function(el){
     if(b.dataset.t){var i=+b.dataset.t,v=+b.dataset.v;S.s[i][cur]=S.s[i][cur]===v?0:v;S.t[i][cur]=Date.now();S.from="here";S.at=Date.now();save();
       if(navigator.vibrate)try{navigator.vibrate(8)}catch(x){}
       render();
-      clearTimeout(advT);if(S.s[0][cur]&&S.s[1][cur]&&S.s[2][cur]&&cur<17){var h0=cur;advT=setTimeout(function(){if(cur===h0){cur++;paintScorer()}},650)}
+      var full=S.s[0][cur]&&S.s[1][cur]&&S.s[2][cur];
+      if(full&&(cur+1)%3===0){var c2=calc(),pr=sc.querySelector(".sc-prompt");pr.querySelector("span").innerHTML=(cur===17?"<b>That's 18.</b> Send the final":cur===8?"<b>At the turn.</b> Send the update":"<b>Thru "+(cur+1)+".</b> Send the update")+" · "+c2.order.filter(function(t){return t.thru}).map(function(t){return esc(t.name.split(" ")[0])+" "+fmt(t.tp)}).join(", ");pr.hidden=false}
+      clearTimeout(advT);if(full&&cur<17){var h0=cur;advT=setTimeout(function(){if(cur===h0){cur++;paintScorer()}},650)}
     }
   });
   var sx=null;sc.addEventListener("touchstart",function(e){sx=e.touches[0].clientX},{passive:true});
