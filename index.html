@@ -204,6 +204,10 @@ h2{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size
 .g time{font-family:var(--mono);font-size:.72rem;color:var(--frost);font-variant-numeric:tabular-nums}
 .g .m{font-size:.96rem;line-height:1.3}
 .g .m small{display:block;font-family:var(--serif);font-style:italic;font-size:.95rem;color:#e8a0a8}
+.g .m .ls{display:block;font-family:var(--mono);font-style:normal;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--frost);margin-top:4px}
+.g .m .ls b{color:var(--bone);font-weight:600}
+.g .m .ls.live{color:#ff5a5a}
+.g .m .ls.live b{color:#fff}
 .ch{font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border:1px solid var(--line);border-radius:2px;color:var(--frost);white-space:nowrap}
 .g.hot .m{color:var(--bone);font-weight:600}
 .g.hot time{color:var(--ember)}
@@ -1406,6 +1410,48 @@ window.hbSnow=function(el){
       }).catch(function(){});
   }
   load(); setInterval(load,30000);
+})();
+/* ---------- Live scores on the slate (same ESPN scoreboard) ---------- */
+(function(){
+  var rows=[].slice.call(document.querySelectorAll("#slate .g")); if(!rows.length)return;
+  var q=(location.search.match(/now=([^&]+)/)||[])[1];
+  function now(){return q?new Date(decodeURIComponent(q)).getTime():Date.now()}
+  var DAYS=[["20261105","2026-11-05T19:00:00-05:00"],["20261106","2026-11-06T18:30:00-05:00"],["20261107","2026-11-07T11:30:00-05:00"]];
+  var END=new Date("2026-11-08T04:00:00-05:00").getTime();
+  function norm(t){return String(t||"").toLowerCase().replace(/[^a-z0-9& ]/g,"").replace(/\s+/g," ").trim()}
+  function names(c){var t=c.team||{},n=[t.location,t.shortDisplayName,t.displayName,t.abbreviation],dn=norm(t.displayName).split(" ");
+    if(dn.length>1)n.push(dn.slice(0,-1).join(" "));return n.map(norm)}
+  rows.forEach(function(g){var m=g.querySelector(".m"),txt="";
+    for(var i=0;i<m.childNodes.length;i++){if(m.childNodes[i].nodeType===3)txt+=m.childNodes[i].nodeValue}
+    var parts=txt.replace(/&amp;/g,"&").split(/\s+at\s+/);
+    if(parts.length===2){g._a=norm(parts[0]);g._h=norm(parts[1])}
+  });
+  function paint(events){
+    rows.forEach(function(g){
+      if(!g._a)return;
+      var ev=events.filter(function(e){var cs=e.competitions[0].competitors;
+        var hit=function(x){return cs.some(function(c){return names(c).indexOf(x)>-1})};return hit(g._a)&&hit(g._h)})[0];
+      if(!ev)return;
+      var cs=ev.competitions[0].competitors,st=ev.status.type;
+      var away=cs.filter(function(c){return c.homeAway==="away"})[0],home=cs.filter(function(c){return c.homeAway==="home"})[0];
+      var el=g.querySelector(".ls");
+      if(st.state==="pre"){if(el)el.remove();return}
+      if(!el){el=document.createElement("span");el.className="ls";g.querySelector(".m").appendChild(el)}
+      var a=+away.score,h=+home.score,line=function(c,s,w){return (w?"<b>":"")+c.team.abbreviation+" "+s+(w?"</b>":"")};
+      var fin=st.state==="post";
+      el.className="ls"+(fin?"":" live");
+      el.innerHTML=(fin?"Final":"Live · "+st.shortDetail)+" &nbsp; <span style=\"white-space:nowrap\">"+line(away,a,fin&&a>h)+", "+line(home,h,fin&&h>a)+"</span>";
+    });
+  }
+  function load(){
+    var n=now(); if(n>END)return;
+    var ds=DAYS.filter(function(d){return n>=new Date(d[1]).getTime()}).map(function(d){return d[0]});
+    if(!ds.length)return;
+    Promise.all(ds.map(function(d){return fetch("https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?dates="+d+"&groups=80&limit=300")
+      .then(function(r){return r.json()}).then(function(j){return j.events||[]}).catch(function(){return []})}))
+      .then(function(a){paint([].concat.apply([],a))});
+  }
+  load(); setInterval(load,60000);
 })();
 /* ---------- Live Blairsville sky: real sun, moon, weather, firepit ---------- */
 (function(){
