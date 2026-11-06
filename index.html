@@ -342,6 +342,45 @@ details.more>summary::-webkit-details-marker{display:none}
 details.more>summary::after{content:"+";font-size:1rem;line-height:1}
 details.more[open]>summary::after{content:"–"}
 details.more[open]>summary{margin-bottom:14px}
+/* ---- Nut Cup live ---- */
+.nutlive{margin-top:22px;border:1px solid rgba(255,123,51,.45);border-radius:3px;background:linear-gradient(180deg,#14201f,#0f1719);overflow:hidden}
+.nutlive .nh{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.nutlive .nh b{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:1.25rem;letter-spacing:.02em}
+.nutlive .st{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--frost)}
+.nutlive .st.on{color:#ff5a5a}.nutlive .st.on:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff5a5a;margin-right:6px;animation:nlp 1.4s ease-in-out infinite}
+@keyframes nlp{50%{opacity:.25}}
+.nutlive .champ{padding:14px;border-bottom:1px solid var(--line);background:radial-gradient(120% 140% at 0 0,rgba(255,123,51,.25),transparent 60%)}
+.nutlive .champ span{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ember)}
+.nutlive .champ div{font-family:var(--display);font-weight:900;font-size:2rem;text-transform:uppercase;line-height:1;margin-top:4px}
+.nl-row{display:grid;grid-template-columns:28px 1fr auto auto;gap:10px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.nl-row .pos{font-family:var(--display);font-weight:900;font-size:1.4rem;color:var(--frost)}
+.nl-row.lead .pos{color:var(--ember)}
+.nl-row .tm{font-family:var(--display);font-weight:800;font-size:1.1rem;text-transform:uppercase;line-height:1.05}
+.nl-row .tm small{display:block;font-family:var(--mono);font-weight:400;font-size:.6rem;letter-spacing:.08em;color:var(--frost);text-transform:uppercase;margin-top:3px}
+.nl-row .thru{font-family:var(--mono);font-size:.62rem;color:var(--frost);text-align:right;text-transform:uppercase;letter-spacing:.06em}
+.nl-row .tp{font-family:var(--display);font-weight:900;font-size:1.9rem;min-width:52px;text-align:right;line-height:1}
+.nl-row .tp.u{color:#ff6b6b}.nl-row .tp.e{color:var(--bone)}.nl-row .tp.o{color:var(--frost)}
+.nl-holes{grid-column:1/-1;display:grid;grid-template-columns:repeat(18,1fr);gap:2px;margin-top:2px}
+.nl-holes i{display:flex;align-items:center;justify-content:center;height:20px;font-style:normal;font-family:var(--mono);font-size:.58rem;color:#5d7178;background:#0b1214;border-radius:2px}
+.nl-holes i.p{color:var(--bone)}
+.nl-holes i.b{color:#fff;background:#c0392b;border-radius:50%}
+.nl-holes i.eg{color:#fff;background:#ff7b33;border-radius:50%;box-shadow:0 0 0 2px #c0392b}
+.nl-holes i.bo{color:var(--bone);background:#22343a}
+.nl-holes i.cap{color:var(--bone);background:#22343a;box-shadow:inset 0 -2px 0 var(--ember)}
+.nutlive .bets{padding:10px 14px;border-bottom:1px solid var(--line)}
+.nutlive .bets div{display:flex;flex-direction:column;gap:2px;font-size:.72rem;padding:6px 0;color:var(--frost);border-bottom:1px dashed rgba(238,229,214,.08)}
+.nutlive .bets div:last-child{border-bottom:0}
+.nutlive .bets div b{font-size:.88rem}
+.nutlive .bets .bh{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--frost);padding:0 0 4px;border:0}
+.nutlive .bets div b{color:var(--bone);font-weight:600}
+.nutlive .bets .ok{color:#7ad69a}
+.nutlive .nf{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;flex-wrap:wrap}
+.nutlive .nf small{font-size:.7rem;color:var(--frost)}
+.nutlive .legend{font-family:var(--mono);font-size:.58rem;color:var(--frost);letter-spacing:.05em}
+.nutnow{margin-top:14px;border:1px solid rgba(255,123,51,.5);border-left:4px solid var(--ember);border-radius:3px;padding:10px 12px;background:#0d1518;display:block;color:inherit;text-decoration:none}
+.nutnow span{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ember)}
+.nutnow div{font-size:.9rem;margin-top:4px;line-height:1.5}
+.nutnow div b{font-family:var(--display);font-weight:900;font-size:1.1rem}
 .odds{margin-top:26px;border:1px solid var(--line);border-radius:3px;overflow:hidden}
 .odds .oh{display:flex;justify-content:space-between;align-items:baseline;padding:12px 14px;background:#141f22;border-bottom:1px solid var(--line)}
 .odds .oh b{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:1.15rem}
@@ -500,6 +539,7 @@ body.arrived .arrive{display:block}
     <p class="sub" id="nowSub"></p>
     <ul class="todo" id="nowList" hidden></ul>
     <div class="score" id="dawgScore" hidden></div>
+    <a class="nutnow" id="nutNow" href="#nutcup" hidden><span id="nutNowL">Nut Cup · Live</span><div id="nutNowT"></div></a>
     <div class="firet" id="fireT" hidden><span class="em"></span><span id="fireTxt"></span></div>
     <div class="next" id="nowNext"><span class="mono">Up next</span><b id="nowNextT"></b></div>
   </div>
@@ -822,6 +862,13 @@ body.arrived .arrive{display:block}
       <div class="team"><span class="mono">Team 03</span><div class="pair">Brett <i>&amp;</i> Kunal</div><p>Apology issued in advance. Shoes should hold.</p></div>
     </div>
   </div>
+    <div class="nutlive" id="nutLive">
+      <div class="nh"><b>Nut Cup · Leaderboard</b><span class="st" id="nlSt">Tees off Fri 9:10</span></div>
+      <div class="champ" id="nlChamp" hidden><span>Nut Cup champions</span><div id="nlChampT"></div></div>
+      <div id="nlRows"></div>
+      <div class="bets" id="nlBets" hidden></div>
+      <div class="nf"><span class="legend">● birdie &nbsp;■ bogey &nbsp;▁ capped at bogey</span><a class="btn" href="https://docs.google.com/spreadsheets/d/1EaH46JvbosmSLDyjwsH3n55RYkjDfzuAWmbGEM5aTuM/edit" target="_blank" rel="noopener">Scorekeepers: enter scores ↗</a></div>
+    </div>
     <div class="odds">
       <div class="oh"><b>The board</b><span class="mono">Odds to win the Nut Cup</span></div>
       <div class="row fav"><div><b>Mack &amp; Nick</b><small>Favorites. Mack is one of the two best players on the tee sheet.</small><div class="bar"><i style="width:66%"></i></div></div><span class="line">−190</span></div>
@@ -1452,6 +1499,72 @@ window.hbSnow=function(el){
       .then(function(a){paint([].concat.apply([],a))});
   }
   load(); setInterval(load,60000);
+})();
+/* ---------- Nut Cup live leaderboard (reads the Google Sheet scorecard) ---------- */
+(function(){
+  var SID="1EaH46JvbosmSLDyjwsH3n55RYkjDfzuAWmbGEM5aTuM";
+  var TEAMS=["Mack & Nick","Peyton & Nathan","Brett & Kunal"];
+  var LINES=[[0,2,2.5],[0,1,3.5],[2,1,1.5]]; /* fav, dog, strokes */
+  var rowsEl=document.getElementById("nlRows"); if(!rowsEl)return;
+  var st=document.getElementById("nlSt"),champ=document.getElementById("nlChamp"),champT=document.getElementById("nlChampT"),bets=document.getElementById("nlBets");
+  var nn=document.getElementById("nutNow"),nnT=document.getElementById("nutNowT"),nnL=document.getElementById("nutNowL");
+  var q=location.search, qn=(q.match(/now=([^&]+)/)||[])[1];
+  function now(){return qn?new Date(decodeURIComponent(qn)).getTime():Date.now()}
+  var TEE=new Date("2026-11-06T09:10:00-05:00").getTime(), WIN0=new Date("2026-11-06T08:30:00-05:00").getTime(), WIN1=new Date("2026-11-06T19:00:00-05:00").getTime(), NOW1=new Date("2026-11-06T22:30:00-05:00").getTime();
+  function fmt(n){return n===0?"E":(n>0?"+"+n:"−"+(-n))}
+  function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+  function render(par,grid){ /* grid[hole][col 0..5] raw numbers or null */
+    var any=false;
+    var T=TEAMS.map(function(name,ti){
+      var tot=0,tp=0,thru=0,cells=[],birdies=0,r2=0;
+      for(var r=0;r<2;r++)for(var h=0;h<18;h++){
+        var v=grid[h][ti+3*r],p=par[h];
+        if(v==null||isNaN(v)){if(r===0)cells.push("<i>"+(h+1)+"</i>");continue}
+        any=true;var c=Math.min(v,p+1);tot+=c;tp+=c-p;thru++;if(r)r2++;if(c<p)birdies++;
+        if(r===0){var k=c<=p-2?"eg":c<p?"b":c===p?"p":(v>p+1?"cap":"bo");cells.push('<i class="'+k+'">'+c+"</i>")}
+      }
+      return {name:name,i:ti,tot:tot,tp:tp,thru:thru,cells:cells,birdies:birdies,r2:r2};
+    });
+    var holes=T.some(function(t){return t.r2})?36:18;
+    var order=T.slice().sort(function(a,b){return a.tp-b.tp||b.thru-a.thru||a.i-b.i});
+    var done=T.every(function(t){return t.thru>=holes});
+    var n=now(), live=any&&!done;
+    st.className="st"+(live?" on":""); st.textContent=done?"Final":live?"Live":(n<TEE?"Tees off Fri 9:10":"Waiting on the first score");
+    var pos=0,prev=null;
+    rowsEl.innerHTML=order.map(function(t,k){
+      if(prev===null||t.tp!==prev){pos=k+1;prev=t.tp}
+      var tied=order.filter(function(o){return o.tp===t.tp}).length>1&&any;
+      var cls=t.tp<0?"u":t.tp===0?"e":"o";
+      return '<div class="nl-row'+(k===0&&any?" lead":"")+'"><span class="pos">'+(any?(tied?"T":"")+pos:"–")+'</span><span class="tm">'+esc(t.name)+'<small>'+(t.thru?t.tot+" strokes"+(t.birdies?" · "+t.birdies+" birdie"+(t.birdies>1?"s":""):""):"No scores yet")+'</small></span><span class="thru">'+(t.thru>=holes?"F":t.thru?"Thru "+t.thru:"—")+'</span><span class="tp '+cls+'">'+(t.thru?fmt(t.tp):"")+'</span><div class="nl-holes">'+t.cells.join("")+"</div></div>";
+    }).join("");
+    if(done){champ.hidden=false;var w=order.filter(function(o){return o.tp===order[0].tp});champT.textContent=w.map(function(o){return o.name}).join(" / ")+(w.length>1?" (tie)":"")+" · "+fmt(order[0].tp)}else champ.hidden=true;
+    /* bets: compare to-par (same holes) against the lines */
+    if(any){
+      var h=LINES.map(function(L){var f=T[L[0]],d=T[L[1]];if(!f.thru||!d.thru)return "";
+        var m=d.tp-f.tp; /* strokes fav is ahead by */
+        var cov=m>L[2];
+        var lead=m===0?"All square":(m>0?f.name+" by "+m:d.name+" by "+(-m));
+        return "<div><span>"+esc(f.name)+" −"+L[2]+" vs "+esc(d.name)+"</span><b>"+esc(lead)+' · <span class="'+(cov?"ok":"")+'">'+esc(cov?f.name:d.name)+" covering"+"</span></b></div>"}).join("");
+      var P=T[1],B=T[2],prop=(P.thru&&B.thru)?(P.tp<B.tp?"Cashing":"Not yet"):"";
+      if(prop)h+="<div><span>Prop: Peyton &amp; Nathan beat Brett &amp; Kunal (+195)</span><b>"+prop+"</b></div>";
+      h='<div class="bh">Side bets</div>'+h;bets.innerHTML=h;bets.hidden=!h;
+    }
+    /* right-now card */
+    if(nn){var show=any&&n>=WIN0&&n<NOW1;nn.hidden=!show;
+      if(show){nnL.textContent=done?"Nut Cup · Final":"Nut Cup · Live";nnT.innerHTML=order.map(function(t,k){return (k?" &nbsp;·&nbsp; ":"")+"<b>"+fmt(t.tp)+"</b> "+esc(t.name)+(t.thru>=holes||!t.thru?"":" ("+t.thru+")")}).join("")}}
+  }
+  function parse(tbl){var par=[],grid=[];(tbl.rows||[]).slice(0,18).forEach(function(r,h){var c=r.c||[];par[h]=c[1]&&c[1].v!=null?+c[1].v:4;grid[h]=[];for(var j=0;j<6;j++){var x=c[2+j];var v=x&&x.v!=null&&x.v!==""?parseFloat(x.v):null;grid[h][j]=(v!=null&&!isNaN(v)&&v>0)?Math.round(v):null}});while(grid.length<18){grid.push([null,null,null,null,null,null]);par.push(4)}return [par,grid]}
+  var seq=0;
+  function load(){
+    if(/nut=demo/.test(q)){var D=[[5,4,4,3,4,5,4,3,4,4,4,3,5,4,4,4,3,5],[[4,5,5],[4,4,5],[3,4,6],[3,3,4],[4,5,4],[5,4,7],[4,4,4],[2,3,3],[4,4,5],[4,4,4],[3,4,5],[3,null,3],[5,null,5],[null,null,null],[null,null,null],[null,null,null],[null,null,null],[null,null,null]].map(function(r){return r.concat([null,null,null])})];render(D[0],D[1]);return}
+    var cb="__nut"+(++seq),s=document.createElement("script");
+    window[cb]=function(j){try{if(j&&j.status!=="error"&&j.table){var P=parse(j.table);render(P[0],P[1])}}catch(e){} delete window[cb];s.remove()};
+    s.onerror=function(){delete window[cb];s.remove()};
+    s.src="https://docs.google.com/spreadsheets/d/"+SID+"/gviz/tq?tqx=out:json;responseHandler:"+cb+"&sheet=Scores&range=A5:H22&headers=0&t="+Date.now();
+    document.head.appendChild(s);
+  }
+  (function(){var g=[],p=[5,4,4,3,4,5,4,3,4,4,4,3,5,4,4,4,3,5];for(var h=0;h<18;h++)g.push([null,null,null,null,null,null]);render(p,g)})();
+  load(); setInterval(function(){var n=now();if(n>=WIN0&&n<WIN1)load()},30000);
 })();
 /* ---------- Live Blairsville sky: real sun, moon, weather, firepit ---------- */
 (function(){
