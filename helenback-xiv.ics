@@ -46,7 +46,7 @@ UID:hb14-2@helenback
 DTSTAMP:20261105T000000Z
 DTSTART;TZID=America/New_York:20261106T183000
 DTEND;TZID=America/New_York:20261106T203000
-SUMMARY:Dinner by Nathan & Em
+SUMMARY:Dinner by Nathan
 LOCATION:Holly Jolly Christmas Cabin\, 50 Sullivan Trail\, Blairsville\, GA 30512
 DESCRIPTION:Smoked pork tenderloin\, roasted vegetables and rice. Then the firepit. Fire out by 10:30.
 END:VEVENT
