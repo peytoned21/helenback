@@ -486,6 +486,7 @@ html.scoring,html.scoring body{overflow:hidden}
 .bg-grid button{aspect-ratio:1;border:1px solid rgba(255,255,255,.12);background:#1b0f11;color:#f3e7e8;border-radius:4px;font-size:.56rem;line-height:1.15;padding:3px;display:flex;align-items:center;justify-content:center;text-align:center;transition:transform .08s,background .15s;overflow:hidden;hyphens:auto;-webkit-hyphens:auto}
 .bg-grid button:active{transform:scale(.94)}
 .bg-grid button.on{background:#ba0c2f;border-color:#ff3b5c;color:#fff;font-weight:700;box-shadow:inset 0 0 0 2px rgba(255,255,255,.18)}
+.bg-grid button.auto:after{content:"";position:absolute}
 .bg-grid button.free{background:#000;color:#ff3b5c;font-family:var(--display);font-weight:900;font-size:.8rem;text-transform:uppercase}
 .bg-grid button.line{animation:bgline 1.2s ease-in-out infinite}
 @keyframes bgline{50%{background:#ff2a4d;box-shadow:0 0 12px #ff2a4d}}
@@ -659,7 +660,7 @@ body.arrived .arrive{display:block}
     <ul class="todo" id="nowList" hidden></ul>
     <div class="score" id="dawgScore" hidden></div>
     <div class="bingo" id="bingo" hidden>
-      <div class="bg-h"><b>Dawgs Bingo</b><span class="mono">Every phone gets its own card. Tap a square when it happens. First to five in a row yells BINGO.</span></div>
+      <div class="bg-h"><b>Dawgs Bingo</b><span class="mono">Every phone gets its own card, and it fills itself from the live play-by-play. Just watch. First phone to five in a row: yell BINGO.</span></div>
       <div class="bg-grid" id="bgGrid"></div>
       <div class="bg-f"><span class="mono" id="bgCount"></span><button type="button" class="bg-new" id="bgNew">New card</button></div>
       <div class="bg-win" id="bgWin" hidden><b>BINGO</b><span>Stand up and yell it. Show the room your card.</span></div>
@@ -1876,33 +1877,98 @@ window.hbSnow=function(el){
   pull();setInterval(function(){var n=Date.now();if(n<new Date("2026-11-07T04:00:00-05:00").getTime())pull()},30000);
   render();
 })();
-/* ---------- Dawgs Bingo (each phone gets its own card) ---------- */
+/* ---------- Dawgs Bingo: fills itself from ESPN play-by-play (taps still work as a backup) ---------- */
 (function(){
   var box=document.getElementById("bingo");if(!box)return;
-  var SQ=["Georgia touchdown","Ole Miss touchdown","Field goal over 45 yards","Missed field goal","Missed extra point","Interception","Lost fumble","Pick six or fumble return TD","Sack on third down","Targeting review","Replay overturns the call","Review takes forever","4th-down try","Fake punt or fake field goal","Blocked kick","Onside kick","Two-point try","Safety","Play of 50+ yards","QB runs for 20+","Punt downed inside the 5","3rd-and-10+ converted","Holding wipes out a big play","Delay of game","Penalty declined","Player loses his helmet","Kirby yells at an official","Kicker shown on the sideline","Hail Mary before half","Score in the last 2 min of a half","Timeout just to ice the kicker","Announcers bring up the playoff","Dawgs fans loud on TV","Truck commercial","Someone yells at the projector","Someone checks another score","Someone dozes off","Somebody says \"that's targeting\" and it isn't"];
-  var KEY="hb14-bingo",st=null;
+  /* id, label, test(play, ctx) */
+  var SQ=[
+    ["gatd","Georgia touchdown"],["omtd","Ole Miss touchdown"],["rtd","Rushing touchdown"],["ptd","Passing touchdown"],
+    ["fg","Field goal good"],["fg40","Field goal of 40+"],["fgx","Missed field goal"],["xpx","Missed extra point"],["two","Two-point try"],
+    ["int","Interception"],["fum","Lost fumble"],["dtd","Defensive or return TD"],["sack","Sack"],["sack3","3 sacks in the game"],
+    ["pen","Penalty flag"],["hold","Holding call"],["pi","Pass interference"],["fs","False start"],["tgt","Targeting call"],
+    ["y40","Play of 40+ yards"],["y60","Play of 60+ yards"],["punt","Punt"],["punt5","5 punts in the game"],["ret","Return of 25+ yards"],
+    ["saf","Safety"],["blk","Blocked kick"],["onside","Onside kick"],["to","Timeout"],["d4","4th-down try"],["tod","Turnover on downs"],
+    ["rev","Call reversed on review"],["two_min","Score in the last 2 min of a half"],["ga21","Georgia reaches 21"],["om21","Ole Miss reaches 21"],
+    ["lead","Lead changes hands"],["pen10","10 penalties in the game"]
+  ];
+  var LAB={};SQ.forEach(function(x){LAB[x[0]]=x[1]});
+  var KEY="hb14-bingo2",st=null;
   try{st=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){}
   function rng(seed){return function(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}}
-  function deal(seed){var r=rng(seed),a=SQ.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(r()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}var c=a.slice(0,24);c.splice(12,0,"GO DAWGS");return c}
-  function fresh(){st={seed:Math.floor(Math.random()*1e9),m:[12]};save()}
+  function deal(seed){var r=rng(seed),a=SQ.map(function(x){return x[0]});for(var i=a.length-1;i>0;i--){var j=Math.floor(r()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}var c=a.slice(0,24);c.splice(12,0,"free");return c}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+  function fresh(){st={seed:Math.floor(Math.random()*1e9),m:[]};save()}
   if(!st||!st.seed)fresh();
+  var HIT={},live=false,lastNote="";
   var L=[];for(var i=0;i<5;i++){L.push([0,1,2,3,4].map(function(k){return i*5+k}));L.push([0,1,2,3,4].map(function(k){return k*5+i}))}L.push([0,6,12,18,24]);L.push([4,8,12,16,20]);
   var grid=document.getElementById("bgGrid"),win=document.getElementById("bgWin"),cnt=document.getElementById("bgCount"),had=false;
+  function marked(id,k){return k===12||HIT[id]||st.m.indexOf(k)>-1}
   function paint(){
-    var card=deal(st.seed),on={};st.m.forEach(function(k){on[k]=1});
+    var card=deal(st.seed),on={};card.forEach(function(id,k){if(marked(id,k))on[k]=1});
     var lines=L.filter(function(l){return l.every(function(k){return on[k]})}),hot={};lines.forEach(function(l){l.forEach(function(k){hot[k]=1})});
-    grid.innerHTML=card.map(function(t,k){return '<button type="button" data-k="'+k+'" class="'+(k===12?"free on":on[k]?"on":"")+(hot[k]?" line":"")+'">'+t.replace(/&/g,"&amp;").replace(/</g,"&lt;")+"</button>"}).join("");
-    win.hidden=!lines.length;cnt.textContent=(st.m.length-1)+" of 24 marked"+(lines.length?" · "+lines.length+" line"+(lines.length>1?"s":""):"");
+    grid.innerHTML=card.map(function(id,k){var auto=k!==12&&HIT[id];return '<button type="button" data-k="'+k+'" class="'+(k===12?"free on":on[k]?"on":"")+(auto?" auto":"")+(hot[k]?" line":"")+'">'+(k===12?"GO DAWGS":LAB[id])+"</button>"}).join("");
+    var n=Object.keys(on).length-1;win.hidden=!lines.length;
+    cnt.textContent=(live?"Live from ESPN · ":"")+n+" of 24"+(lines.length?" · "+lines.length+" line"+(lines.length>1?"s":""):"")+(lastNote?" · "+lastNote:"");
     if(lines.length&&!had&&navigator.vibrate)try{navigator.vibrate([30,60,30,60,120])}catch(e){}
     had=!!lines.length;
   }
-  grid.addEventListener("click",function(e){var b=e.target.closest("[data-k]");if(!b)return;var k=+b.dataset.k;if(k===12)return;var i=st.m.indexOf(k);if(i>-1)st.m.splice(i,1);else st.m.push(k);save();paint()});
+  grid.addEventListener("click",function(e){var b=e.target.closest("[data-k]");if(!b)return;var k=+b.dataset.k;if(k===12)return;var card=deal(st.seed);if(HIT[card[k]])return;var i=st.m.indexOf(k);if(i>-1)st.m.splice(i,1);else st.m.push(k);save();paint()});
   var arm=0,nb=document.getElementById("bgNew");
   nb.addEventListener("click",function(){if(Date.now()-arm<3000){fresh();had=false;paint();nb.textContent="New card";arm=0}else{arm=Date.now();nb.textContent="Tap again for a new card";setTimeout(function(){if(Date.now()-arm>=2900)nb.textContent="New card"},3000)}});
+  /* ---- read the game ---- */
+  function analyze(sum){
+    var comp=((sum.header||{}).competitions||[])[0]||{},teams={},gaId=null;
+    (comp.competitors||[]).forEach(function(c){var t=c.team||{};teams[t.id]=c.homeAway;if(/^(UGA|GA)$/.test(t.abbreviation)||/Georgia Bulldogs/.test(t.displayName||""))gaId=t.id});
+    var gaHome=gaId&&teams[gaId]==="home";
+    var plays=[];var dr=sum.drives||{};(dr.previous||[]).forEach(function(d){(d.plays||[]).forEach(function(p){plays.push(p)})});if(dr.current)(dr.current.plays||[]).forEach(function(p){plays.push(p)});
+    if(!plays.length&&sum.plays)plays=sum.plays;
+    var H={},sacks=0,punts=0,pens=0,prevH=0,prevA=0,lead=0;
+    plays.forEach(function(p){
+      var t=((p.type&&p.type.text)||"")+" | "+(p.text||""),T=t.toLowerCase(),y=+p.statYardage||0;
+      var hs=+p.homeScore||prevH,as=+p.awayScore||prevA,dh=hs-prevH,da=as-prevA;
+      var ga=gaHome?hs:as,om=gaHome?as:hs,dga=gaHome?dh:da,dom=gaHome?da:dh;
+      if(/touchdown/.test(T)&&!/no good|nullified|reversed/.test(T)){
+        if(dga>=6)H.gatd=1;if(dom>=6)H.omtd=1;
+        if(/rush/.test(T))H.rtd=1;if(/pass/.test(T)&&!/interception|intercept/.test(T))H.ptd=1;
+        if(/interception|fumble|return|blocked|defensive/.test(T)&&!/kickoff return touchdown|punt return touchdown/.test(T)||/return touchdown/.test(T))H.dtd=1;
+      }
+      if(/field goal good|field goal made|fg good/.test(T)||(/field goal/.test(T)&&/ is good|good\b/.test(T)&&!/no good/.test(T))){H.fg=1;var fy=(T.match(/(\d+)\s*(?:yd|yard)s?\s*(?:field goal|fg)/)||[])[1];if(+fy>=40)H.fg40=1}
+      if(/field goal (missed|no good)|missed field goal|fg missed|field goal.*no good/.test(T))H.fgx=1;
+      if(/extra point (missed|no good|failed|blocked)|pat (missed|failed|blocked)|kick (is )?no good/.test(T))H.xpx=1;
+      if(/two-point|two point|2-point|2pt/.test(T))H.two=1;
+      if(/interception|intercepted/.test(T))H.int=1;
+      if(/fumble/.test(T)&&/(recovered by|recovery \(opponent\)|lost)/.test(T)&&!/recovered by .*(own|same)/.test(T))H.fum=1;
+      if(/\bsack/.test(T)){sacks++;H.sack=1}
+      if(/penalty/.test(T)&&!/declined/.test(T)||/penalty/.test(p.type&&p.type.text||"")){pens++;H.pen=1}
+      if(/holding/.test(T))H.hold=1;if(/pass interference/.test(T))H.pi=1;if(/false start/.test(T))H.fs=1;if(/targeting/.test(T))H.tgt=1;
+      if(y>=40&&!/punt|kickoff|penalty/.test(T))H.y40=1;if(y>=60&&!/punt|kickoff|penalty/.test(T))H.y60=1;
+      if(/\bpunt/.test(T)&&!/fake/.test(T)){punts++;H.punt=1}
+      var rm=T.match(/return(?:ed)?[^.;|]*? for (\d+) ?(?:yd|yard)/)||T.match(/return(?:ed)?\s+(\d+) ?(?:yd|yard)/);if(rm&&+rm[1]>=25)H.ret=1;
+      if(/safety/.test(T))H.saf=1;if(/blocked/.test(T)&&/(punt|field goal|kick|pat)/.test(T))H.blk=1;if(/onside/.test(T))H.onside=1;
+      if(/timeout/.test(T))H.to=1;
+      if(p.start&&+p.start.down===4&&!/punt|field goal|timeout|penalty|kneel/.test(T))H.d4=1;
+      if(/turnover on downs|downs\b/.test(T)&&/turnover|downs/.test(T))H.tod=1;
+      if(/reversed|overturned/.test(T))H.rev=1;
+      if((dh>0||da>0)&&p.clock&&p.period&&(+p.period.number===2||+p.period.number===4)){var cv=(p.clock.displayValue||"").split(":");var secs=(+cv[0])*60+(+cv[1]||0);if(secs<=120)H.two_min=1}
+      if(ga>=21)H.ga21=1;if(om>=21)H.om21=1;
+      var nl=ga>om?1:ga<om?-1:0;if(nl&&lead&&nl!==lead)H.lead=1;if(nl)lead=nl;
+      prevH=hs;prevA=as;
+    });
+    if(sacks>=3)H.sack3=1;if(punts>=5)H.punt5=1;if(pens>=10)H.pen10=1;
+    return {H:H,n:plays.length};
+  }
+  var evId=null;
+  function poll(){
+    var go=evId?Promise.resolve(evId):fetch("https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?dates=20261107&groups=80&limit=300").then(function(r){return r.json()}).then(function(j){
+      var ev=(j.events||[]).filter(function(e){return e.competitions[0].competitors.some(function(c){return /^(UGA|GA)$/.test(c.team.abbreviation)||c.team.displayName==="Georgia Bulldogs"})})[0];evId=ev&&ev.id;return evId});
+    go.then(function(id){if(!id)return null;return fetch("https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event="+id).then(function(r){return r.json()})})
+      .then(function(sum){if(!sum)return;var a=analyze(sum);if(a.n){HIT=a.H;live=true;lastNote=""}else{lastNote="waiting for kickoff"}paint()})
+      .catch(function(){lastNote="";paint()});
+  }
   var q=(location.search.match(/now=([^&]+)/)||[])[1],n=q?new Date(decodeURIComponent(q)).getTime():Date.now();
   var A=new Date("2026-11-07T17:30:00-05:00").getTime(),B=new Date("2026-11-08T02:00:00-05:00").getTime();
-  if((n>=A&&n<B)||/bingo/.test(location.search)){box.hidden=false;paint()}
+  if((n>=A&&n<B)||/bingo/.test(location.search)){box.hidden=false;paint();poll();setInterval(poll,45000)}
+  window.__hbBingoAnalyze=analyze;
 })();
 /* ---------- Live Blairsville sky: real sun, moon, weather, firepit ---------- */
 (function(){
