@@ -1960,14 +1960,16 @@ window.hbSnow=function(el){
   var evId=null;
   function poll(){
     var go=evId?Promise.resolve(evId):fetch("https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?dates=20261107&groups=80&limit=300").then(function(r){return r.json()}).then(function(j){
-      var ev=(j.events||[]).filter(function(e){return e.competitions[0].competitors.some(function(c){return /^(UGA|GA)$/.test(c.team.abbreviation)||c.team.displayName==="Georgia Bulldogs"})})[0];evId=ev&&ev.id;return evId});
+      var ev=TEST?(j.events||[]).filter(function(e){return e.status&&e.status.type&&e.status.type.state==="post"})[0]:(j.events||[]).filter(function(e){return e.competitions[0].competitors.some(function(c){return /^(UGA|GA)$/.test(c.team.abbreviation)||c.team.displayName==="Georgia Bulldogs"})})[0];
+      if(TEST)lastNote=ev?"TEST using "+(ev.shortName||ev.name):"TEST: no finished game found";evId=ev&&ev.id;return evId});
     go.then(function(id){if(!id)return null;return fetch("https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event="+id).then(function(r){return r.json()})})
-      .then(function(sum){if(!sum)return;var a=analyze(sum);if(a.n){HIT=a.H;live=true;lastNote=""}else{lastNote="waiting for kickoff"}paint()})
+      .then(function(sum){if(!sum){paint();return}var a=analyze(sum);if(a.n){HIT=a.H;live=true;if(!TEST)lastNote=""}else if(!TEST){lastNote="waiting for kickoff"}else lastNote+=" · no plays";paint()})
       .catch(function(){lastNote="";paint()});
   }
+  var TEST=/bingotest/.test(location.search);
   var q=(location.search.match(/now=([^&]+)/)||[])[1],n=q?new Date(decodeURIComponent(q)).getTime():Date.now();
   var A=new Date("2026-11-07T17:30:00-05:00").getTime(),B=new Date("2026-11-08T02:00:00-05:00").getTime();
-  if((n>=A&&n<B)||/bingo/.test(location.search)){box.hidden=false;paint();poll();setInterval(poll,45000)}
+  if((n>=A&&n<B)||/bingo/.test(location.search)){box.hidden=false;if(TEST){st={seed:st.seed,m:[]};save=function(){}}paint();poll();setInterval(poll,45000)}
   window.__hbBingoAnalyze=analyze;
 })();
 /* ---------- Live Blairsville sky: real sun, moon, weather, firepit ---------- */
