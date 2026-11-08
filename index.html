@@ -479,6 +479,23 @@ html.scoring,html.scoring body{overflow:hidden}
 @keyframes cstamp{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}70%{opacity:1;transform:translate(-50%,-70%) scale(1)}100%{opacity:0;transform:translate(-50%,-95%) scale(1)}}
 @keyframes cpop{0%{transform:translate(-50%,-50%);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy)));opacity:0}}
 @media (prefers-reduced-motion: reduce){.sc-cele{display:none}.nl-row.bump .tp{animation:none}}
+.bingo{margin-top:14px;border:1px solid rgba(186,12,47,.7);border-radius:6px;background:linear-gradient(170deg,#2a1214,#120c0d);padding:12px;position:relative;overflow:hidden}
+.bg-h b{display:block;font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:1.5rem;letter-spacing:.02em;color:#fff}
+.bg-h .mono{display:block;font-size:.58rem;letter-spacing:.06em;color:#d9b3b8;margin-top:2px;line-height:1.5}
+.bg-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:10px}
+.bg-grid button{aspect-ratio:1;border:1px solid rgba(255,255,255,.12);background:#1b0f11;color:#f3e7e8;border-radius:4px;font-size:.56rem;line-height:1.15;padding:3px;display:flex;align-items:center;justify-content:center;text-align:center;transition:transform .08s,background .15s;overflow:hidden;hyphens:auto;-webkit-hyphens:auto}
+.bg-grid button:active{transform:scale(.94)}
+.bg-grid button.on{background:#ba0c2f;border-color:#ff3b5c;color:#fff;font-weight:700;box-shadow:inset 0 0 0 2px rgba(255,255,255,.18)}
+.bg-grid button.free{background:#000;color:#ff3b5c;font-family:var(--display);font-weight:900;font-size:.8rem;text-transform:uppercase}
+.bg-grid button.line{animation:bgline 1.2s ease-in-out infinite}
+@keyframes bgline{50%{background:#ff2a4d;box-shadow:0 0 12px #ff2a4d}}
+.bg-f{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.bg-f .mono{font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:#d9b3b8}
+.bg-new{background:none;border:1px solid rgba(255,255,255,.25);color:#f3e7e8;font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;border-radius:3px}
+.bg-win{margin-top:10px;padding:12px;border-radius:6px;background:#ba0c2f;text-align:center;animation:bgpop .5s ease-out}
+.bg-win b{display:block;font-family:var(--display);font-weight:900;font-size:2.4rem;line-height:1;color:#fff;letter-spacing:.06em}
+.bg-win span{font-size:.75rem;color:#ffe1e6}
+@keyframes bgpop{0%{transform:scale(.7);opacity:0}70%{transform:scale(1.05)}100%{transform:none;opacity:1}}
 .nutnow{margin-top:14px;border:1px solid rgba(255,123,51,.5);border-left:4px solid var(--ember);border-radius:3px;padding:10px 12px;background:#0d1518;display:block;color:inherit;text-decoration:none}
 .nutnow span{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ember)}
 .nutnow div{font-size:.9rem;margin-top:4px;line-height:1.5}
@@ -641,6 +658,12 @@ body.arrived .arrive{display:block}
     <p class="sub" id="nowSub"></p>
     <ul class="todo" id="nowList" hidden></ul>
     <div class="score" id="dawgScore" hidden></div>
+    <div class="bingo" id="bingo" hidden>
+      <div class="bg-h"><b>Dawgs Bingo</b><span class="mono">Every phone gets its own card. Tap a square when it happens. First to five in a row yells BINGO.</span></div>
+      <div class="bg-grid" id="bgGrid"></div>
+      <div class="bg-f"><span class="mono" id="bgCount"></span><button type="button" class="bg-new" id="bgNew">New card</button></div>
+      <div class="bg-win" id="bgWin" hidden><b>BINGO</b><span>Stand up and yell it. Show the room your card.</span></div>
+    </div>
     <a class="nutnow" id="nutNow" href="#nutcup" hidden><span id="nutNowL">Nut Cup · Live</span><div id="nutNowT"></div></a>
     <div class="firet" id="fireT" hidden><span class="em"></span><span id="fireTxt"></span></div>
     <div class="next" id="nowNext"><span class="mono">Up next</span><b id="nowNextT"></b></div>
@@ -1852,6 +1875,34 @@ window.hbSnow=function(el){
   }
   pull();setInterval(function(){var n=Date.now();if(n<new Date("2026-11-07T04:00:00-05:00").getTime())pull()},30000);
   render();
+})();
+/* ---------- Dawgs Bingo (each phone gets its own card) ---------- */
+(function(){
+  var box=document.getElementById("bingo");if(!box)return;
+  var SQ=["Georgia touchdown","Ole Miss touchdown","Field goal over 45 yards","Missed field goal","Missed extra point","Interception","Lost fumble","Pick six or fumble return TD","Sack on third down","Targeting review","Replay overturns the call","Review takes forever","4th-down try","Fake punt or fake field goal","Blocked kick","Onside kick","Two-point try","Safety","Play of 50+ yards","QB runs for 20+","Punt downed inside the 5","3rd-and-10+ converted","Holding wipes out a big play","Delay of game","Penalty declined","Player loses his helmet","Kirby yells at an official","Kicker shown on the sideline","Hail Mary before half","Score in the last 2 min of a half","Timeout just to ice the kicker","Announcers bring up the playoff","Dawgs fans loud on TV","Truck commercial","Someone yells at the projector","Someone checks another score","Someone dozes off","Somebody says \"that's targeting\" and it isn't"];
+  var KEY="hb14-bingo",st=null;
+  try{st=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){}
+  function rng(seed){return function(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}}
+  function deal(seed){var r=rng(seed),a=SQ.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(r()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}var c=a.slice(0,24);c.splice(12,0,"GO DAWGS");return c}
+  function fresh(){st={seed:Math.floor(Math.random()*1e9),m:[12]};save()}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+  if(!st||!st.seed)fresh();
+  var L=[];for(var i=0;i<5;i++){L.push([0,1,2,3,4].map(function(k){return i*5+k}));L.push([0,1,2,3,4].map(function(k){return k*5+i}))}L.push([0,6,12,18,24]);L.push([4,8,12,16,20]);
+  var grid=document.getElementById("bgGrid"),win=document.getElementById("bgWin"),cnt=document.getElementById("bgCount"),had=false;
+  function paint(){
+    var card=deal(st.seed),on={};st.m.forEach(function(k){on[k]=1});
+    var lines=L.filter(function(l){return l.every(function(k){return on[k]})}),hot={};lines.forEach(function(l){l.forEach(function(k){hot[k]=1})});
+    grid.innerHTML=card.map(function(t,k){return '<button type="button" data-k="'+k+'" class="'+(k===12?"free on":on[k]?"on":"")+(hot[k]?" line":"")+'">'+t.replace(/&/g,"&amp;").replace(/</g,"&lt;")+"</button>"}).join("");
+    win.hidden=!lines.length;cnt.textContent=(st.m.length-1)+" of 24 marked"+(lines.length?" · "+lines.length+" line"+(lines.length>1?"s":""):"");
+    if(lines.length&&!had&&navigator.vibrate)try{navigator.vibrate([30,60,30,60,120])}catch(e){}
+    had=!!lines.length;
+  }
+  grid.addEventListener("click",function(e){var b=e.target.closest("[data-k]");if(!b)return;var k=+b.dataset.k;if(k===12)return;var i=st.m.indexOf(k);if(i>-1)st.m.splice(i,1);else st.m.push(k);save();paint()});
+  var arm=0,nb=document.getElementById("bgNew");
+  nb.addEventListener("click",function(){if(Date.now()-arm<3000){fresh();had=false;paint();nb.textContent="New card";arm=0}else{arm=Date.now();nb.textContent="Tap again for a new card";setTimeout(function(){if(Date.now()-arm>=2900)nb.textContent="New card"},3000)}});
+  var q=(location.search.match(/now=([^&]+)/)||[])[1],n=q?new Date(decodeURIComponent(q)).getTime():Date.now();
+  var A=new Date("2026-11-07T17:30:00-05:00").getTime(),B=new Date("2026-11-08T02:00:00-05:00").getTime();
+  if((n>=A&&n<B)||/bingo/.test(location.search)){box.hidden=false;paint()}
 })();
 /* ---------- Live Blairsville sky: real sun, moon, weather, firepit ---------- */
 (function(){
