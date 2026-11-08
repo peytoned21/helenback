@@ -1922,9 +1922,12 @@ window.hbSnow=function(el){
     var gaHome=gaId&&teams[gaId]==="home";
     var plays=[];var dr=sum.drives||{};(dr.previous||[]).forEach(function(d){(d.plays||[]).forEach(function(p){plays.push(p)})});if(dr.current)(dr.current.plays||[]).forEach(function(p){plays.push(p)});
     if(!plays.length&&sum.plays)plays=sum.plays;
+    /* the in-progress drive is also listed under previous: drop repeats */
+    var seen={};plays=plays.filter(function(p){var k=p.id||p.sequenceNumber||((p.text||"")+"|"+(p.clock&&p.clock.displayValue)+"|"+(p.period&&p.period.number));if(seen[k])return false;seen[k]=1;return true});
     var H={},sacks=0,punts=0,pens=0,prevH=0,prevA=0,lead=0;
     plays.forEach(function(p){
-      var t=((p.type&&p.type.text)||"")+" | "+(p.text||""),T=t.toLowerCase(),y=+p.statYardage||0;
+      var TY=((p.type&&p.type.text)||"").toLowerCase(),t=TY+" | "+(p.text||""),T=t.toLowerCase(),y=+p.statYardage||0;
+      var noplay=/no play|nullified/.test(T)&&!/^penalty/.test(TY);
       var hs=+p.homeScore||prevH,as=+p.awayScore||prevA,dh=hs-prevH,da=as-prevA;
       var ga=gaHome?hs:as,om=gaHome?as:hs,dga=gaHome?dh:da,dom=gaHome?da:dh;
       if(/touchdown/.test(T)&&!/no good|nullified|reversed/.test(T)){
@@ -1936,13 +1939,13 @@ window.hbSnow=function(el){
       if(/field goal (missed|no good)|missed field goal|fg missed|field goal.*no good/.test(T))H.fgx=1;
       if(/extra point (missed|no good|failed|blocked)|pat (missed|failed|blocked)|kick (is )?no good/.test(T))H.xpx=1;
       if(/two-point|two point|2-point|2pt/.test(T))H.two=1;
-      if(/interception|intercepted/.test(T))H.int=1;
-      if(/fumble/.test(T)&&/(recovered by|recovery \(opponent\)|lost)/.test(T)&&!/recovered by .*(own|same)/.test(T))H.fum=1;
-      if(/\bsack/.test(T)){sacks++;H.sack=1}
+      if(!noplay&&(TY?/interception/.test(TY):/intercepted/.test(T)))H.int=1;
+      if(!noplay&&(TY?/fumble/.test(TY)&&/opponent|return touchdown/.test(TY):/fumble/.test(T)&&/recovered by/.test(T)))H.fum=1;
+      if(!noplay&&(TY?/sack/.test(TY):/\bsacked\b/.test(T))){sacks++;H.sack=1}
       if(/penalty/.test(T)&&!/declined/.test(T)||/penalty/.test(p.type&&p.type.text||"")){pens++;H.pen=1}
       if(/holding/.test(T))H.hold=1;if(/pass interference/.test(T))H.pi=1;if(/false start/.test(T))H.fs=1;if(/targeting/.test(T))H.tgt=1;
       if(y>=40&&!/punt|kickoff|penalty/.test(T))H.y40=1;if(y>=60&&!/punt|kickoff|penalty/.test(T))H.y60=1;
-      if(/\bpunt/.test(T)&&!/fake/.test(T)){punts++;H.punt=1}
+      if(!noplay&&(TY?/^(blocked )?punt/.test(TY)&&!/return touchdown/.test(TY):/\bpunts? /.test(T)&&!/fake/.test(T))){punts++;H.punt=1}
       var rm=T.match(/return(?:ed)?[^.;|]*? for (\d+) ?(?:yd|yard)/)||T.match(/return(?:ed)?\s+(\d+) ?(?:yd|yard)/);if(rm&&+rm[1]>=25)H.ret=1;
       if(/safety/.test(T))H.saf=1;if(/blocked/.test(T)&&/(punt|field goal|kick|pat)/.test(T))H.blk=1;if(/onside/.test(T))H.onside=1;
       if(/timeout/.test(T))H.to=1;
